@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="staple.css">
+    <link rel="icon" href="cuffee.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <title> HexDump & HollyWood</title>
+
+</head>
+<body>
+    <section class="whole">
+        <div class="container">
+            <div class="menu">
+                <a href="../index.html" class="menu-link">Home</a>
+                <a href="" class="menu-link">Menu</a>
+              </div>
+
+              <section class="two">
+            <div class="actual-container">
+                <div class="progress-bar"></div>
+               
+                    <h1 class="title">HexDump & Hollywood: A Curiosity Ignited</h1>
+                    
+                    <div class="about">
+                        <p>Olaoluwa Oke| 26 June 2023 </p>
+                        </div>
+                        <div class="data">
+                            <p class="datap">
+                                You know, as a computer science student who has a bit of free time(not true), I've always loved getting my 
+                                hands dirty with programming and diving headfirst into paradigms and concepts and just knowledge generally. But guess what? 
+                                It was a Hollywood movie, of all things that got me started on this wild ride into the maze of HexDump
+                                </p>
+
+                           <div class="datap">
+                            <div class="box">
+                            <div class="verse">
+                            <i>public class HexdumpPrinter { <br>
+                                public static void printHexdump(byte[] data, int bytesPerLine) { <br>
+                                    for (int i = 0; i < data.length; i += bytesPerLine) { <br>
+                                        StringBuilder hexLine = new StringBuilder(); <br>
+                                        StringBuilder asciiLine = new StringBuilder(); <br> <br>
+                            
+                                        for (int j = i; j < Math.min(i + bytesPerLine, data.length); j++) { <br>
+                                            byte b = data[j];<br>
+                                            hexLine.append(String.format("%02X ", b)); <br>
+                                            asciiLine.append((b >= 32 && b <= 126) ? (char) b : '.'); <br>
+                                        } <br> <br>
+                            
+                                        System.out.printf("%08X: %-48s %s%n", i, hexLine.toString(), asciiLine.toString());<br>
+                                    }<br> 
+                                }<br><br>
+                            
+                                public static void main(String[] args) { <br>
+                                    byte[] binaryData = {0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x57, 0x6F, 0x72, 0x6C, 0x64};<br>
+                                    printHexdump(binaryData, 16);<br>
+                                }<br>
+                            }<br><br>
+                            
+                            </i>
+                            </div>
+                            </div>
+
+                            It was a lazy Sunday afternoon, so I put on a movie to pass the time. I chose Kingsman 
+                            (Anyone who knows me knows I love movies that has the word "gentleman"). While watching, between the fights
+                             and gadgets, there's a scene where a character does some quick programming.
+
+
+                            <br> <br>At first it's all part of the show,   but something about the onscreen code catches my attention. 
+                            I realize I'm actually interested in whether Hollywood got the details right. These lines  of code,
+                             buried in an action movie, manages to pique my curiosity about programming and make me wonder about the 
+                             authenticity of how it's portrayed onscreen. (And see i know it's not the first)
+                            Suddenly this mindless popcorn film has triggered my curiosity in a way I didn't expect. 
+                            Those lines of code, in the middle of all the explosions and chase scenes, 
+                            sparked an interest that would eventually lead me to explore programming more deeply.
+                            <br> <br>
+
+                            In the middle of all the mayhem, there's this character,
+                             Merlin, who manages to override implants in the heads of enemy spies. 
+                             And how does he do it? With a method called "printHexdump" - a bit of a Hollywood twist on actual 
+                             programming. As a tech enthusiast, I couldn't help but laugh at this quirky take on the real-world concept 
+                             of hex dumps. Sure, movies often bend the rules, but this one got 
+                            me itching to dig deeper and find out what's really going on behind the cinematic smoke and mirrors.
+                         
+                            <br> <br>
+                            Rather than dismiss the scene as pure fiction, my curiosity took over. 
+                            I wondered,"What even is this hex dump they mentioned? Does it actually have anything to do with overriding 
+                            implants?". These questions sparked a desire to embark on an odyssey to uncover the truth behind this peculiar 
+                            term. And so began my journey down the 
+                            rabbit hole of hex dumps and data formats, all sparked by two fictional lines of code in an action movie.
+
+                            <br> <br>
+                            A quick search on google  revealed the real essence of hex dumps. As it turns out,  <strong>  a hex dump is a method used in programming and debugging. It provides a hexadecimal representation of binary data, helping developers analyze and comprehend the contents of files or network protocols.</strong> 
+
+                            In short, a hex dump converts data into a format that makes it human-readable. This realization gave me new appreciation for the ingenuity behind the fictional "printHexdump" method in the movie. Though purely Hollywood invention, it was grounded in a real programming technique - one I had never heard of until a silly action movie piqued my interest.
+                            <br> <br>
+
+                            As I learned more about hex dumps, I found it amusing how different the Hollywood 
+                            depiction was from reality. In the movie, the "printHexdump" method is used to manipulate
+                             implants when in truth, hex dumps are a mundane debugging tool that help programmers 
+                             examine binary data. <br> <br>
+
+                            The writers took a real programming concept and turned it into a comedic and dramatic
+                             scene, showcasing cinema's blend of reality and imagination. What started as a way to 
+                             casually pass the time ended up sparking my curiosity and introducing me to a new concept
+                             . And it all stemmed from two lines of fictional code in an action movie - 
+                             a small creative liberty that set me on an unexpected journey of discovery.
+                             <br> <br>
+                             So the next time you see programming depicted peculiarly in a movie, keep an open mind and a sense of 
+                             humor. Let it pique your interest and drive you to investigate the reality beneath the
+                              fiction. You never know what discoveries or amusing anecdotes might await you at the start 
+                             of your own technological odyssey, sparked by an offhand scene in an unlikely place.
+
+                             <iframe src="https://giphy.com/embed/3EhYMtXCYRYXK" width="480" height="283" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/wink-kingsman-eggsy-3EhYMtXCYRYXK"></a></p>
+
+                                
+                                <br> <br>
+                                
+                                <h2>References</h2> 
+
+
+                                <ol> 
+                                    <li>Hexdump. (2021, June 6). In Wikipedia. <a href="https://en.wikipedia.org/wiki/Hex_dump" target="_blank">https://en.wikipedia.org/wiki/Hex_dump</a> </li>
+                                     <li>Eggsy. (n.d.). GIPHY. <a href="https://giphy.com/gifs/wink-kingsman-eggsy-3EhYMtXCYRYXK" target="_blank">http://giphy.com/gifs/wink-kingsman-eggsy-3EhYMtXCYRYXK</a></li>
+                                      <li>Kingsman: The Secret Service. (2014). Directed by Matthew Vaughn [Film]. <a href="https://www.imdb.com/title/tt2802144/" target="_blank" rel="noopener noreferrer">https://www.imdb.com/title/tt2802144/</a></li> 
+
+
+                                    </ol>
+
+                                    <hr>
+                                </section>
+              
+                              
+
+                                    <section class="footer">
+                                        <div class="numpage">
+                                            <p class="num">Page 1 of 1</p>
+                                            <p>© Melancholy Mornings</p>
+                                            <!---<hr class="ubad">---->
+                                
+                                            
+                                        </div>
+                                        <a title="Google Analytics Alternative" href="https://clicky.com/101412980"><img alt="Clicky" src="//static.getclicky.com/media/links/badge.gif" border="0" /></a>
+                                        <script async data-id="101412980" src="//static.getclicky.com/js"></script>
+                                        
+                                            
+                                        </body>

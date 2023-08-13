@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="staple.css">
+    <link rel="icon" href="cuffee.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <title> HexDump & HollyWood</title>
+
+</head>
+<body>
+    <section class="whole">
+        <div class="container">
+            <div class="menu">
+                <a href="../index.html" class="menu-link">Home</a>
+                <a href="" class="menu-link">Menu</a>
+              </div>
+
+              <section class="two">
+              
+                <div class="actual-container">
+                    <div class="progress-bar"></div>
+    
+                        <h1 class="title">Fail-Over vs Fail-Back</h1>
+                        
+                        <div class="about">
+                            <p>Olaoluwa Oke| 14 June 2023 </p>
+                            </div>
+                            <div class="data">
+                                <p class="datap">
+                                    Have you ever found yourself marveling at the resilience of your favorite websites and applications, 
+                                    effortlessly staying up and running despite encountering unexpected hiccups? 
+                                    As an African, I've become well acquainted with the challenges we often face when it comes to reliable services, 
+                                    and perhaps today, we can unravel the secret behind this digital wizardry.
+                                    </p>
+    
+                               <div class="datap">
+                                <div class="box">
+                                <div class="verse">
+                                <i>In Nigeria, banks and large corporations rely on the government-provided electricity, 
+                                    which unfortunately tends to be highly unreliable. To counter this challenge, these organizations have 
+                                    implemented backup generator systems. The moment the electricity supply falters, within a fraction of a second, the backup generators seamlessly kick into action.
+                                </i>
+                                </div>
+                                </div>
+    
+                                 In the digital world, websites and applications rely on servers and infrastructure to stay operational. 
+                                However, just like the unreliable electricity supply, these systems can experience glitches, 
+                                downtime, or even complete failures. That's where fail-over comes into play.</li>
+                                <br> <br>
+                             Fail-over is basically having a backup generator ready to take over the moment the electricity goes off. 
+                                Similarly, in the tech world, fail-over involves seamlessly transitioning from a primary system to a backup system when the
+                                 primary encounters issues. 
+                                It happens almost instantly, ensuring that users can continue their online activities without any disruptions.
+                                <br> <br>
+                                But what happens when the primary system is back in action? Well, that's where failback comes into the picture. 
+                                Just like when the electricity returns, and the generator switches off, 
+                                failback ensures a smooth transition back to the primary system once it's resolved. 
+                                It's a seamless process that happens behind the scenes, allowing users to enjoy uninterrupted services.
+    
+                                <br> <br>
+                                "Failover and failback are like the a tag team in a   wrestling ring. Failover enters with a thunderous cheer from the crowd when the service is down
+                                 from the crowd, while failback makes a grand comeback, roaring, 
+                                'I'm here to restore order in the digital universe!' It's a heavyweight championship match for system reliability!
+                                <br> <br>
+    
+                                <iframe src="https://giphy.com/embed/TuARLGCHFWgDifNnen" width="480" height="267" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/aew-all-elite-wrestling-double-or-nothing-2021-TuARLGCHFWgDifNnen"></a></p>
+    
+                                <br> <br>
+                                Although it's not that simple
+                                    <br> <br>
+                                    The Java code below is to simulate fail-over and fail-back in servers, databases, cloud centers, Networking and even Web apps
+                                <br> <br>
+                               
+                                            
+      
+                                        <code>
+                                        import java.sql.Connection;  <br>
+                                            import java.sql.DriverManager; <br>
+                                            import java.sql.SQLException; <br>
+    
+                                            <br> <br>
+    
+    
+                                        public class DatabaseConnectionManager { <br>
+                                        private  String /* Connection */ primaryConnection; <br>
+                                        private  String /* Connection */ backupConnection; <br>
+                                        private  String /* Connection */ activeConnection;<br>
+                                        <br>
+                                        <br>
+        
+    
+                            public void initialize() throws SQLException { <br> 
+                            // Initialize primary and backup connections <br> 
+                            
+                            primaryConnection ="Primary connection" ;/*DriverManager.getConnection("jdbc:mysql://primary-host:3306/database", 
+                            "username", "password");*/ <br> <br> <br>
+                           backupConnection ="Secondary connection" ;/* DriverManager.getConnection("jdbc:mysql://backup-host:3306/database",
+             "username", "password");*/ <br> <br> 
+    
+                            // Set the primary connection as the active connection initially <br>  
+                            activeConnection = primaryConnection; <br>
+                                 } <br> 
+    
+          public String getConnection() { <br> 
+            return activeConnection;<br>
+        }<br><br>
+    
+        public void performFailOver() { <br>
+            // Switch to the backup connection<br>
+            activeConnection = backupConnection;<br>
+            System.out.println("Error: Fail-over: Switched to backup connection.");<br>
+        }<br><br>
+    
+        public void performFailBack() {<br>
+            // Switch back to the primary connection<br>
+            activeConnection = primaryConnection;<br>
+            System.out.println("Fail-back: Switched back to primary connection.");<br>
+        }<br><br>
+    
+        public static void main(String[] args) { <br>
+            try {<br>
+                DatabaseConnectionManager connectionManager = new DatabaseConnectionManager();<br>
+                connectionManager.initialize();<br> <br>
+    
+                // Simulating normal database operation<br>
+                /*Connection*/ String  connection = connectionManager.getConnection();<br>
+                System.out.println("Performing database operation using connection: " + connection);<br><br>
+    
+                // Simulating primary connection failure<br>
+                connectionManager.performFailOver();<br><br>
+    
+                // Simulating fail-over scenario <br> 
+                connection = connectionManager.getConnection();<br>
+                System.out.println("Performing database operation using connection: " + connection);<br><br>
+    
+                // Simulating primary connection restoration<br>
+                connectionManager.performFailBack();<br><br>
+    
+                // Simulating fail-back scenario<br>
+                connection = connectionManager.getConnection();<br>
+                System.out.println("Performing database operation using connection: " + connection);<br>
+            } catch (SQLException e) {<br>
+                e.printStackTrace();<br>
+            }<br>
+        }<br>
+    }<br>
+                                        </code>
+                                   
+                                            
+                                             
+                            <hr>
+                            
+                </div>
+    
+                
+                
+            </div>
+    
+        </section>           
+
+        <section class="footer">
+            <div class="numpage">
+                <p class="num">Page 1 of 1</p>
+                <p>© Word Aglow Parish 2023</p>
+                <!---<hr class="ubad">---->
+    
+                
+            </div>
+            <a title="Google Analytics Alternative" href="https://clicky.com/101412980"><img alt="Clicky" src="//static.getclicky.com/media/links/badge.gif" border="0" /></a>
+            <script async data-id="101412980" src="//static.getclicky.com/js"></script>
