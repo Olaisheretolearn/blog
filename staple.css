@@ -98,11 +98,15 @@
 
 
 hr{
-    margin-top:60px;
-    margin-bottom:60px;
+
     opacity: 0.4;
 }
 
+
+.lasthr{
+    margin-top:0px;
+    margin-bottom:20px;
+}
 
 .numpage p{
     display:flex;
@@ -168,6 +172,87 @@ iframe{
 h4{
     margin-top:27px;
 }
+
+.footer {
+    padding: 20px; 
+}
+
+.abouttt {
+    display: flex;
+    align-items: center; 
+    gap: 50px; 
+}
+
+.picc img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+}
+
+.aboutt {
+    display: flex;
+    flex-direction: column;
+}
+
+.aboutt p{
+    font-size: 12px
+}
+
+/* Style adjustments for better readability */
+h4 {
+    margin: 0; 
+}
+
+p {
+    margin: 5px 0; 
+}
+
+
+/* Styles for the blog navigation */
+.blog-navigation {
+
+    padding: 20px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.previous-blog,
+.next-blog {
+    text-align: center;
+}
+
+/* Style links for better visibility */
+.previous-blog a,
+.next-blog a {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    border: 1px solid #666;
+    border-radius: 5px;
+}
+
+
+
+.previous-blog p{
+    font-size:7px;
+}
+
+
+
+/* Style the headings and preview text */
+h5, h6, p {
+    margin: 0;
+}
+
+h6 {
+    color: #555;
+}
+
 
 
 @media screen and (max-width: 600px) {
