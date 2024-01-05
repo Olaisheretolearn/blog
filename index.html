@@ -7,23 +7,24 @@
     <script src="https://kit.fontawesome.com/2b6c3456a7.js" crossorigin="anonymous"></script>
     <link rel="icon" href="cuffee.png" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dark-mode.css" id="dark-mode-stylesheet" disabled>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title> Melancholy Mornings</title>
 </head>
 <body>
     <section class="title">
         
         <div class="first-half">
-
-
-
-            <a href=""><h1>Melancholy Mornings</h1></a>
+    <a href=""><h1>Melancholy Mornings</h1></a><div class="toggle-icon" id="dark-mode-toggle"><i class="fa-solid fa-moon" ></i></div> 
+    
+    
            <p>The blog of Ọláolúwa Òkè</p>
     
         </div>
     </section>
+    
 
-
-
+\
   
 
     <section class="two">
@@ -82,6 +83,24 @@
             </div>
 
 
+            <hr>
+            
+            <a href="june11.html">Welcome, </a>
+
+            <div class="about">
+                <p>Olaoluwa Oke | 11 June 2023 </p>
+                </div>
+
+            <div class="data">
+                <p class="datap">
+                    Hey there! 🌟 Welcome . I'm from Nigeria but right now, I'm chilling in Canada, learning cool stuff about computers and the science around it. So, 
+                    I got this 9-5 thing that's not exactly about coding, but hey, we all gotta do something, right?.........
+
+
+                </p>
+            </div>
+
+
             
 
 
@@ -98,18 +117,21 @@
 
     </section>
 
+    
 
-    <section class="footer">
-        <div class="numpage">
-            <p class="num">Page 1 of 1</p>
-            <!---<hr class="ubad">---->
+    <button id="dark-mode-toggle">Toggle Dark Mode</button>
+    
+    <script>
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const darkModeStylesheet = document.getElementById('dark-mode-stylesheet');
+    
+        darkModeToggle.addEventListener('click', () => {
+            const isDarkModeEnabled = darkModeStylesheet.disabled;
+            darkModeStylesheet.disabled = !isDarkModeEnabled;
+        });
+    </script>
+    
 
-            
-        </div>
-
-       
-
-        
-    </section>
+   
 </body>
 </html>

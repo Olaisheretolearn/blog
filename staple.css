@@ -30,6 +30,9 @@
     
 }
 
+
+
+
 .progress-bar {
     position: fixed;
     top: 0;
@@ -131,7 +134,7 @@ hr{
         justify-content:center;
         padding:15px;
         margin-bottom: 47px;
-        background-color: #faf9f7;
+        
         
       
 }

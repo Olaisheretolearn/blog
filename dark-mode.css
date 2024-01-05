@@ -1,0 +1,24 @@
+/* dark-mode.css */
+
+body {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+.menu{
+    display: flex;
+    justify-content: space-between;
+    opacity:0.5;
+    color: white;
+
+}
+.menu a {
+    color: white;
+    opacity:1;
+}
+
+.actual-posts a{
+    color: white;
+}
+
+

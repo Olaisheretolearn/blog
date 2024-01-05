@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="staple.css">
     <link rel="icon" href="cuffee.png" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dark-mode.css" id="dark-mode-stylesheet" disabled>
+
     <script src="script.js"></script>
     <title>Melancholic Mornings</title>
 
@@ -26,6 +28,7 @@
     
                         <h1 class="title">Embracing Imperfection</h1>
                         
+
                         <div class="about">
                             <p>Olaoluwa Oke| 26 Nov 2023 </p>
                             </div>
@@ -99,21 +102,32 @@
 
             <hr class="lasthr">
 
+            <button id="dark-mode-toggle">Toggle Dark Mode</button>
+
             <section class="blog-navigation">
                 <div class="grid-container">
                     <div class="previous-blog">
-                    
                         <a href="june14.html">
                             <h6>HexDump & Hollywood: A Curiosity Ignited</h6>
                             <p>You know, as a computer science student who has a bit...</p>
                         </a>
                     </div>
                     <div class="next-blog">
-        
-                       
+                        <!-- Add content for the next blog -->
                     </div>
                 </div>
             </section>
+            
+            <script>
+                const darkModeToggle = document.getElementById('dark-mode-toggle');
+                const darkModeStylesheet = document.getElementById('dark-mode-stylesheet');
+            
+                darkModeToggle.addEventListener('click', () => {
+                    const isDarkModeEnabled = darkModeStylesheet.disabled;
+                    darkModeStylesheet.disabled = !isDarkModeEnabled;
+                });
+            </script>
+            
         
             <a title="Google Analytics Alternative" href="https://clicky.com/101412980"><img alt="Clicky" src="//static.getclicky.com/media/links/badge.gif" border="0" /></a>
             <script async data-id="101412980" src="//static.getclicky.com/js"></script>
