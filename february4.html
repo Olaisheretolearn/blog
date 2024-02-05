@@ -6,9 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="staple.css">
     <link rel="icon" href="cuffee.png" type="image/x-icon">
+    <link rel="stylesheet" href="dark-mode.css" id="dark-mode-stylesheet" disabled>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
-    <title> Welcome</title>
+    <title>melancholy Mornings</title>
 
 </head>
 <body>
@@ -16,10 +18,14 @@
         <div class="container">
             <div class="menu">
                 <a href="../index.html" class="menu-link">Home</a>
+                <div class="toggle-icon" id="dark-mode-toggle"><i class="fa-solid fa-moon" ></i></div> 
                 <a href="" class="menu-link">Menu</a>
+                
               </div>
+              
 
               <section class="two">
+                
               
                 <div class="actual-container">
                     <div class="progress-bar"></div>
@@ -108,13 +114,13 @@
                                 <h4>The List ADT</h4> 
                                 <h6> <i> What is an interface ?</i> </h6>
                                 <i class="comment">Quick Story</i> <br> <br>
-                                I was talking to a friend about how you can buy <a href="https://example.com">jollof rice</a>
+                                I was talking to a friend about how you can buy jollof Rice
                                 in a Nigerian Domino pizza, you laugh but it's true, 
                                 You can have fried plantain as a topping, you also laugh but it's true (somewhat)
 
                                 <br> <br>
-                                Now Dominos as we know it is a Franchise, that when you want to open a Domino's Pizza  anywhere in the world
-                                 ( don't fact-check me on this  please ) or Say 7eleven 
+                                Now Dominos as we know , is a Franchise, also 7Eleven  that when you want to open a 7Eleven  anywhere in the world
+                                 ( don't fact-check me on this  please )
                                 <br> <br>
                                 You will have to make an application to 7eleven about this, after they review it and you are approved, They send you a
                                  contract of what your 7eleven must do, Which as we all know  food-wise, You must -
@@ -136,7 +142,7 @@
                                 <br> <br>
                                 <div class="list">
                                     <i class="comment">sellFuel();</i>
-                                    <i class="comment">sellCOffee();</i>
+                                    <i class="comment">sellCoffee();</i>
                                     <i class="comment">sellExpiredDrinks();  -- just joking just joking </i>
                                     
                                 </div>
@@ -229,6 +235,9 @@
 
                                  <br> <br>
 
+                                 We're hitting the pause button on our List adventure for today. Next episode , we'll talk about Positions in Lists
+                                 Thanks a bunch for hanging out in this episode of the List series.
+
                                  <div class="code-container">
                                     <span class="keyword">class</span> MyNewList&lt;E&gt; <span class="keyword">implements</span> List&lt;E&gt; {<br>
                                     &nbsp;&nbsp;<span class="comment">// must have all the methods implemented here</span><br>
@@ -258,7 +267,18 @@
                 
             </div>
     
-        </section>           
+        </section> 
+
+            <script>
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const darkModeStylesheet = document.getElementById('dark-mode-stylesheet');
+    
+        darkModeToggle.addEventListener('click', () => {
+            const isDarkModeEnabled = darkModeStylesheet.disabled;
+            darkModeStylesheet.disabled = !isDarkModeEnabled;
+        });
+    </script>
+              
 
         <section class="footer">
             <div class="numpage">
