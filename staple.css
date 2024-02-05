@@ -118,6 +118,7 @@ hr{
    
 }
 
+
 .box{
     display: flex;
   justify-content: center;
@@ -137,6 +138,12 @@ hr{
         
         
       
+}
+
+.comment{
+    font-size:14px;
+
+    font-family: 'Cardo', serif;
 }
 
 .verse i {
