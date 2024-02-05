@@ -74,15 +74,15 @@
                                     </div>
 
 
-                                    The most important concept in the list is positions, In order words we perceive a list to have a first element,
+                                    The most important concept in the list is <i class="comment">positions</i>, In order words we perceive a list to have a first element,
                                      a second ........ n -1, n elements ( n being the last element);
                                       <br> <br>
                                       “Ordered” in this definition means that each element has a position in the list. So the term “ordered” in this context does not mean that the list elements are sorted by value. (Of course, we can always choose to sort the elements on the list if we want;
                                        it’s just that keeping the elements sorted is not an inherent property of being a list.) 
                                        <br> <br>
-                                       
-                                       now let's go a little deeper - <i class="comment">That was what she said</i>
-,
+
+                                       now let's go a little deeper -<i class="comment">That was what she said</i>
+
                                 
                                 <br> <br>
                              
@@ -105,24 +105,77 @@
                                 <i class="comment">but before we go ahead talking about lists, let's talk about the List ADT</i>
 
                                 <br> <br>
+                                <h4>The List ADT</h4> 
+                                <h6> <i> What is an interface ?</i> </h6>
+                                <i class="comment">Quick Story</i> <br> <br>
+                                I was talking to a friend about how you can buy <a href="https://example.com">jollof rice</a>
+                                in a Nigerian Domino pizza, you laugh but it's true, 
+                                You can have fried plantain as a topping, you also laugh but it's true (somewhat)
+
+                                <br> <br>
+                                Now Dominos as we know it is a Franchise, that when you want to open a Domino's Pizza  anywhere in the world
+                                 ( don't fact-check me on this  please ) or Say 7eleven 
+                                <br> <br>
+                                You will have to make an application to 7eleven about this, after they review it and you are approved, They send you a
+                                 contract of what your 7eleven must do, Which as we all know  food-wise, You must -
+
+                                <br> <br>
+                                <div class="list">
+                                    <i class="comment">sellPizza();</i>
+                                    <i class="comment">sellTobaccoAndCigarettes();</i>
+                                    <i class="comment">sellSlurpee();</i>
+                                    <i class="comment">sellBusTickets();</i>
+                                    <i class="comment">sellWings();</i>
+                                    <i class="comment">keepTheFranchiseName();</i>
+                                </div>
+
+                                <br> <br>
+                                Now as a prospective  7eleven owner, there are other guidelines obviously, this is just very high-level representation, you must implement all these, and you must follow that contract, now if you want, 
+                                in your own 7 eleven you can decide to 
+
+                                <br> <br>
+                                <div class="list">
+                                    <i class="comment">sellFuel();</i>
+                                    <i class="comment">sellCOffee();</i>
+                                    <i class="comment">sellExpiredDrinks();  -- just joking just joking </i>
+                                    
+                                </div>
+
+                                but you must first obey the contract or else no agreement 
+
+                                <br> <br>
+                                so an interface a defines a contract that classes
+                                 must adhere to when they implement the interface.
+                                  Interfaces in Java are used to achieve abstraction and
+                                   provide a way to achieve multiple inheritance 
+                                since a class can implement multiple interfaces. 
 
                                 <br> <br>
 
+                                <h6>Let's create out List ADT(Franchise) using an interface </h6>
                                 <br> <br>
+                                A list should be able to -
 
                                 <br> <br>
-                                <div class="box">
-                                    <div class="verse">
-                                    <i>
-                                        By the way, you're welcome to read my thoughts! I'll be mostly diving into the world of OOP and operating Systems, and just a heads up, I try my best to get things right. But hey, we're all human, right? If you ever spot something fishy or
-                                         just wanna chat, shoot me an email at oke-o59@webmail.uwinnipeg.ca. I'm all ears (or, you know, eyes)! 🚀
+
+                                <div class="list">
+                                    <i class="comment">-  To grow and shrink in size as we insert and remove elements.</i>
+                                    <i class="comment">-  We should be able to insert and remove elements from anywhere in the list. ;</i>
+                                    <i class="comment">- We should be able to gain access to any element’s value, either to read it or to change it.  </i>
+                                    <i class="comment">- We must be able to create and clear (or reinitialize) lists. It is also convenient to access the next or previous element from the “current” one. 
                                     </i>
-                                    </div>
-                                    </div>
+                                </div>
+                                <br> <br>
 
-                                    And hey, if you're feeling like breaking me free from the 9-5 grind and offering an internship, I'm all ears! Shoot me an email, and let's chat about how I can keep bringing those cool ideas to life for you.
-                                 Looking forward to the possibility of diving into more exciting projects together! 
-    
+                                Let's Write code for our List ADt using an interface  - in generics
+
+
+
+
+
+                                
+
+                                   
                                 <iframe src="https://giphy.com/embed/WOkeXVxkXpQDCYLSOT" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/Ovationtv-inside-the-actors-studio-actorsstudioovation-insidetheactorsstudio-WOkeXVxkXpQDCYLSOT">via GIPHY</a></p></p>
     
                               

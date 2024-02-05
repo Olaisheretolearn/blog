@@ -99,6 +99,17 @@
     font-weight: bold;
 }
 
+a{
+    color:black;
+    text-decoration: underline;
+    font-size:16px;
+}
+
+.list{
+    display:flex;
+    flex-direction: column;
+}
+
 
 hr{
 
