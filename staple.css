@@ -219,6 +219,40 @@ h4{
     font-size: 12px
 }
 
+/* code edior css       */
+.containerCont{
+width:100%;
+margin-left:-10px;
+}
+    
+  
+
+  .code-container {
+    font-family: 'Courier New', monospace;
+  
+    background-color: #282c34;
+    color: #abb2bf;
+    padding: 20px;
+    border-radius: 5px;
+    overflow-x: auto;
+  }
+
+  .comment {
+    color: #5c6370;
+  }
+
+  .keyword {
+    color: #c678dd;
+  }
+
+  .type {
+    color: #61afef;
+  }
+
+  .exception {
+    color: #e06c75;
+  }
+
 /* Style adjustments for better readability */
 h4 {
     margin: 0; 

@@ -140,6 +140,7 @@
                                     <i class="comment">sellExpiredDrinks();  -- just joking just joking </i>
                                     
                                 </div>
+                                <br> <br>
 
                                 but you must first obey the contract or else no agreement 
 
@@ -152,7 +153,7 @@
 
                                 <br> <br>
 
-                                <h6>Let's create out List ADT(Franchise) using an interface </h6>
+                                <h4>Let's create out List ADT(Franchise) using an interface </h4>
                                 <br> <br>
                                 A list should be able to -
 
@@ -168,15 +169,78 @@
                                 <br> <br>
 
                                 Let's Write code for our List ADt using an interface  - in generics
+                                 <br> <br>
 
+                                 <div class="containerCont">
+                                 <div class="code-container">
+                                    <span class="comment">// List class ADT. Generalize the element type using Java Generics.</span><br>
+                                    <span class="keyword">public</span> <span class="type">interface</span> List&lt;E&gt; { <span class="comment">// List class ADT</span><br>
+                                    &nbsp;&nbsp;<span class="comment">// Remove all contents from the list, so it is once again empty</span><br>
+                                    &nbsp;&nbsp;<span class="keyword">public void</span> clear();<br>
+                                    <br>
+                                    &nbsp;&nbsp;<span class="comment">// Insert "it" at the current location</span><br>
+                                    &nbsp;&nbsp;<span class="comment">// The client must ensure that the list's capacity is not exceeded</span><br>
+                                    &nbsp;&nbsp;<span class="keyword">public boolean</span> insert(E it);<br>
+                                    <br>
+                                    &nbsp;&nbsp;<span class="comment">// Append "it" at the end of the list</span><br>
+                                    &nbsp;&nbsp;<span class="comment">// The client must ensure that the list's capacity is not exceeded</span><br>
+                                    &nbsp;&nbsp;<span class="keyword">public boolean</span> append(E it);<br>
+                                    <br>
+                                    &nbsp;&nbsp;<span class="comment">// Remove and return the current element</span><br>
+                                    &nbsp;&nbsp;<span class="keyword">public</span> E remove() <span class="keyword">throws</span> NoSuchElementException;<br>
+                                    <br>
+                                    &nbsp;&nbsp;<span class="comment">// Set the current position to the start of the list</span><br>
+                                    &nbsp;&nbsp;<span class="keyword">public void</span> moveToStart();<br>
+                                    <br>
+                                    &nbsp;&nbsp;<span class="comment">// Set the current position to the end of the list</span><br>
+                                    &nbsp;&nbsp;<span class="keyword">public void</span> moveToEnd();<br>
+                                    <br>
+                                    &nbsp;&nbsp;<span class="comment">// Move the current position one step left, no change if already at the beginning</span><br>
+                                    &nbsp;&nbsp;<span class="keyword">public void</span> prev();<br>
+                                    <br>
+                                    &nbsp;&nbsp;<span class="comment">// Move the current position one step right, no change if already at the end</span><br>
+                                    &nbsp;&nbsp;<span class="keyword">public void</span> next();<br>
+                                    <br>
+                                    &nbsp;&nbsp;<span class="comment">// Return the number of elements in the list</span><br>
+                                    &nbsp;&nbsp;<span class="keyword">public int</span> length();<br>
+                                    <br>
+                                    &nbsp;&nbsp;<span class="comment">// Return the position of the current element</span><br>
+                                    &nbsp;&nbsp;<span class="keyword">public int</span> currPos();<br>
+                                    <br>
+                                    &nbsp;&nbsp;<span class="comment">// Set the current position to "pos"</span><br>
+                                    &nbsp;&nbsp;<span class="keyword">public boolean</span> moveToPos(int pos);<br>
+                                    <br>
+                                    &nbsp;&nbsp;<span class="comment">// Return true if the current position is at the end of the list</span><br>
+                                    &nbsp;&nbsp;<span class="keyword">public boolean</span> isAtEnd();<br>
+                                    <br>
+                                    &nbsp;&nbsp;<span class="comment">// Return the current element</span><br>
+                                    &nbsp;&nbsp;<span class="keyword">public</span> E getValue() <span class="keyword">throws</span> NoSuchElementException;<br>
+                                    <br>
+                                    &nbsp;&nbsp;<span class="comment">// Tell if the list is empty or not</span><br>
+                                    &nbsp;&nbsp;<span class="keyword">public boolean</span> isEmpty();<br>
+                                    <span class="comment">}</span>
+                                  </div>
+                                </div>
 
+                                <br> <br>
+
+                                Keep this contract if you want to join our List franchise,
+                                 You must have all these methods in your class before you can start 
+
+                                 <br> <br>
+
+                                 <div class="code-container">
+                                    <span class="keyword">class</span> MyNewList&lt;E&gt; <span class="keyword">implements</span> List&lt;E&gt; {<br>
+                                    &nbsp;&nbsp;<span class="comment">// must have all the methods implemented here</span><br>
+                                    }
+                                  </div>
 
 
 
                                 
 
                                    
-                                <iframe src="https://giphy.com/embed/WOkeXVxkXpQDCYLSOT" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/Ovationtv-inside-the-actors-studio-actorsstudioovation-insidetheactorsstudio-WOkeXVxkXpQDCYLSOT">via GIPHY</a></p></p>
+                                <iframe src="https://giphy.com/embed/8tbUmBmhqyns2DMPfP" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/Ovationtv-inside-the-actors-studio-actorsstudioovation-insidetheactorsstudio-WOkeXVxkXpQDCYLSOT">via GIPHY</a></p></p>
     
                               
                                
