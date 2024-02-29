@@ -317,6 +317,15 @@ p {
 .previous-blog p{
     font-size:7px;
 }
+.user-message strong {
+    display: inline;
+    
+}
+
+.user-message {
+margin-bottom: 12px;;
+}
+
 
 
 
@@ -365,6 +374,33 @@ h6 {
     margin-top: -40px;
     
 }
+
+/* code edior css       */
+.containerCont{
+    width:100%;
+    margin-left:-5px;
+    }
+        
+      
+    
+      .code-container {
+        font-family: 'Courier New', monospace;
+      
+        background-color: #282c34;
+        color: #abb2bf;
+        padding: 10px;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+
+
+.note {
+    width:120px;
+    font-size: 14px; 
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+  }
 
 .menu{
     opacity:0.5;
