@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="staple.css">
+    <link rel="icon" href="cuffee.png" type="image/x-icon">
+    <link rel="stylesheet" href="dark-mode.css" id="dark-mode-stylesheet" disabled>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <title> Welcome</title>
+
+</head>
+<body>
+    <section class="whole">
+        <div class="container">
+            <div class="menu">
+                <a href="../index.html" class="menu-link">Home</a>
+                <div class="toggle-icon" id="dark-mode-toggle"><i class="fa-solid fa-moon" ></i></div> 
+                <a href="" class="menu-link">Menu</a>
+                
+              </div>
+
+              <section class="two">
+              
+                <div class="actual-container">
+                    <div class="progress-bar"></div>
+    
+                        <h1 class="title">Array-n't You Curious?</h1>
+                        
+                        <div class="about">
+                            <p>Olaoluwa Oke| 28 February 2024 </p>
+                            </div>
+                            <div class="data">
+                                <p class="datap">
+
+                                    Ever wondered how arrays work under the hood? Yes?, Welcome to Memory Hotel, your one-stop shop for understanding the inner workings of these fascinating data structures! Here, we'll ditch the dry lectures and use images to make sure this is easy to understand   <br> <br> 
+                                    
+                                    Before we go ahead , let us define what an array is  <br> <br> 
+
+                                    <div class="box">
+                                        <div class="verse">
+                                        <i>
+                                            an array is a container object that holds a fixed number of values of a single type.
+                                             The length of an array is 
+                                            established when the array is created, 
+                                            and it remains constant throughout the array's lifetime.
+                                        </i>
+                                        </div>
+                                        </div>
+
+                                    <br> <br> 
+
+
+
+                                  
+    
+                               <div class="datap">
+
+                                An array in java is an instance of the  <span class="note"> java.lang.Array</span> class in the java JDK
+                                which means it is indeed an object. As an object, an array can be assigned to variables, passed as arguments to methods, and returned from methods.
+                                 Each array object maintains a unique identity, 
+                                 and multiple variables can reference the same array object.
+
+                                    <br><br>
+                                    
+                                    I promise the boring part just ended , Now we will use a comic and some pictures to see what happens when you declare an array of integers with spaces for 3 elements
+                                    <br><br>
+                                    Now, User( the person typing the java code and initializing an array, and we assume this has been run already) 
+                                    Hotell attendant ( memory manager that automaticaly allocates and deallocates memory spaces for objects)
+                                    </p>
+
+                                <br><br>
+                                ****************************************************
+                                <br><br>
+                                
+                                <strong>User</strong>: Hi there, I'd like to reserve some rooms. I need an array of integers, size 3, please.
+                                <br><br>
+                                <img src="mycomic1.png" alt="picture goes here" style="width: 100%;">
+                                <br> <br>
+                                <strong>Hotel Attendant</strong>:Certainly! I've prepared three rooms for you at memory address <i>0x7fff5fbff8c0</i>. Here's your key:
+                                <br> <br>
+                                <div class="containerCont">
+                                    <div class="code-container">
+                                        <span class="type">int</span> []A = <span class="type">new</span> int[3];
+                                    </div>
+                                </div>
+                                <br><br>
+                                </p>
+
+                                (now `A` is the address (the reference) to our just created array instance , 
+                                and since they're integer rooms , they already have `0`s in them, if we  `System.out.println(A)` we will get the adrress `0x7fff5fbff8c0` )
+                               
+                                
+
+                                <br> <br>
+                                
+
+
+
+                                <strong>User</strong>: Great! So, how do I access each room?
+                                <br><br>
+                                <strong>Hotel Attendant</strong>: To access each room, or index, in your array, 
+                                you need to calculate the offset from the starting memory address. Since your data type 
+                                is an integer, 
+                                which is 4 bytes wide, you'll need to multiply the index by 4 to find the correct offset.
+                                <br> <br>
+
+                                <img src="mycomic2.png" alt="picture goes here" style="width: 100%;">
+                                <br> <br>
+
+                                (So , if we want to input into the first array index 0 , A[0] , under the hood , it goes to the address 0x7fff5fbff8c0 and adds the element there , and if you want to add the second element at A[1] ,
+                                then under the hood it does 0x7fff5fbff8c0 + 4 bytes ( size of an integer)  )
+
+                                <br><br>
+
+                                <strong>User</strong>: Can you give me an example?
+                                <br><br>
+
+                                <strong>Hotel Attendant</strong>: Of course! Let's say you want to access the second room, which is index 1. 
+                                You'd calculate the offset as follows:
+
+                                <br> <br>
+                                Offset = Index * Size of data type <br>
+                                Offset = 1 * 4 bytes <br>
+                                Offset = 4 bytes
+                                
+                                <br> <br>
+
+                                <strong>User</strong>: So, to access the second room, I need to go to the memory address 0x7fff5fbff8c0 and then add 4 bytes to it?
+                                <br><br>
+                                <strong>Hotel Attendant</strong>: That's right! The address for the second room would be 0x7fff5fbff8c4. Just remember, each room is 4 bytes wide, 
+                                so you can find any room by calculating the correct offset.
+
+                                <br> <br>
+
+                                <img src="MYcOMIC3.png" alt="picture goes here" style="width: 100%;">
+                                <br> <br>
+
+                                <strong>User</strong>: Thanks for the explanation! I'm ready to start filling these rooms with integers.
+                                <br><br>
+                                
+                             
+                                
+                                <strong>Hotel Attendant</strong>: Just make sure that when you want to 
+                                access these rooms, you have the correct key - or in programming terms, 
+                                the right method to retrieve and display your data. 
+                                Let's think of it as having a guest list for each room.
+
+                                <br> <br>
+
+                                <strong>User</strong>: That makes sense. So, how do I get that guest list?
+                                <br><br>
+
+                                <strong>Hotel Attendant</strong>: There are two popular ways to retrieve and display 
+                                the guests in your rooms. The first one is like having a master key - 
+                                a simple method that unlocks all the rooms and shows you everything at once. 
+                                In Java, this master key is called "Arrays.toString(arrayName)." 
+                                It returns a string representation of the array, showing all the elements in one go.
+
+                                <br> <br>
+                                
+                               
+                                <div class="box">
+                                    <div class="verse">
+                                    <i>
+                                        (Now the .toString() method here  is  method in the <span class="note"> java.util.Arrays</span> package that needs to be imported  , it is a method that returns a string representation of the array's elements. When you call toString() on an array, it returns a string containing the array elements enclosed in
+                                 square brackets and separated by commas. not to be confused for the .toString() method of the <span class="note"> java.lang.Objects</span> class  )
+                                    </i>
+                                    </div>
+                                    </div>
+                                    <br><br>
+
+                                    <strong>User</strong>: That sounds convenient! And the second method?
+                                    <br><br>
+ 
+                                    <strong>Hotel Attendant</strong>: The second method is like having individual keys for each room - you'll visit each room one by one and greet each guest personally. In programming, this is done using loops, such as a "for" loop. You iterate through each index of the array, 
+                                    accessing and displaying each element individually.
+                                    <br> <br>
+
+                                    <strong>User</strong>: So, if I want to be more personal and interact with each guest, I should use a loop. But if I just want a quick overview of all the guests, I can use Arrays.toString().
+                                    <br><br>
+
+                                    
+                                    <strong>Hotel Attendant</strong>: That's right! It's all about choosing the right method for the right situation. Just remember, whether you use a master key or individual keys, the goal is to access the rooms and interact with the guests in the way that suits you best.
+                                    <br> <br>
+
+                                    <strong>User</strong>: Thanks for the helpful advice! I'll keep that in mind when working with my array.
+                                    <br><br>
+
+                                    *******************************************************************
+                                    <h5>Questions ?</h5> 
+                                    <i class="normal">Q: How does Java know where the space it allocates end , if elements are added by offsets </i>
+                                    <br> <br>
+                                    <i class="normal">A : When you declare an array, the JVM calculates the memory required based on the size of the data type and the number of elements you specify. It allocates contiguous memory blocks to hold the elements of the array. Java arrays are guaranteed to be contiguous, meaning the elements are stored in adjacent memory locations.
+
+                                        The end of the allocated space for the array is determined by the size of the array and the size of the data type. For example, if you have an array of integers (int), each integer occupies 4 bytes of memory. If you declare an array of size 3, the JVM will allocate 3 * 4 = 12 bytes of contiguous memory for storing these integers. The JVM knows where that 12 bytes end  </i> <br> <br>
+                                
+                                    ******************************************************************************* <br>  <br>
+                                    Next time we will talk about how This memory allocation typically happens on the heap, a region of memory used for dynamic memory allocation.
+                                    <br>  <br>
+
+                                    ************LESSON ENDED : MORE NOTES ********************
+                                    <br> <br>
+                                    In JavaScript, unlike Java, you have the flexibility to create an array 
+                                    and view it in different sizes using typed arrays and ArrayBuffers. For instance, 
+                                    you can create a single ArrayBuffer and view it as both a Uint8Array and a Uint16Array. (code below);
+                                    <br><br>
+
+
+                                    <h5>Uint8Array (a8)</h5>
+                                    <br>  
+                                    In a Uint8Array, each element represents an 8-bit unsigned integer, meaning it occupies 1 byte of memory. This byte-sized representation allows you to directly access specific bytes in the buffer. For instance, 
+                                    a8[0] accesses the first byte, a8[1] accesses the second byte, and so forth.
+                                    <br> <br>
+                                    <h5>Uint16Array (a16)</h5>
+                                    <br> 
+                                    Uint16Array (a16):
+
+    Each element in a Uint16Array represents a 16-bit unsigned integer, so it occupies 2 bytes of memory.
+    When you're accessing elements in a Uint16Array, you need to account for the fact that each element spans 2 bytes in memory.
+    To access the correct byte offset for each element, you need to multiply the index by 2. For example, to access the first element, you'd need to access bytes 0 and 1, for the second element, bytes 2 and 3, and so on groupinfg two 8bits (8+8 = 16).
+                                    
+
+                                        <br> <br>
+
+
+    <div class="containerCont">
+        <div class="code-container">
+            <span class="comment">// Create an ArrayBuffer with 8 bytes of memory</span><br>
+            <span class="comment">// and initialize its values using a Uint8Array and a Uint16Array view</span><br>
+            <span class="keyword">let</span> buffer = <span class="keyword">new</span> ArrayBuffer(8);<br><br>
+            
+            <span class="comment">// Create a Uint8Array view onto the buffer</span><br>
+            <span class="keyword">let</span> a8 = <span class="keyword">new</span> Uint8Array(buffer);<br><br>
+            
+            <span class="comment">// Set some values in the Uint8Array</span><br>
+            a8[0] = 10;<br>
+            a8[1] = 20;<br><br>
+            
+            <span class="comment">// Access and print the values</span><br>
+            <span class="keyword">console</span>.log(<span class="string">"Uint8Array values:"</span>);<br>
+            <span class="keyword">console</span>.log(<span class="string">"a8[0]:"</span>, a8[0]); <span class="comment">// Output: 10</span><br>
+            <span class="keyword">console</span>.log(<span class="string">"a8[1]:"</span>, a8[1]); <span class="comment">// Output: 20</span><br><br>
+            
+            <span class="comment">// Create a Uint16Array view onto the same buffer</span><br>
+            <span class="keyword">let</span> a16 = <span class="keyword">new</span> Uint16Array(buffer);<br><br>
+            
+            <span class="comment">// Access and print the values</span><br>
+            <span class="keyword">console</span>.log(<span class="string">"\nUint16Array values:"</span>);<br>
+            <span class="keyword">console</span>.log(<span class="string">"a16[0]:"</span>, a16[0]); <span class="comment">// Output: 5120 (combines a8[0] and a8[1])</span><br>
+        </div>
+    </div>
+    
+                                <iframe src="https://giphy.com/embed/l3vR8S1OcKd2KyMuI" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/Ovationtv-inside-the-actors-studio-actorsstudioovation-insidetheactorsstudio-WOkeXVxkXpQDCYLSOT">This is what integers do when they get into their 4bytes room</a></p></p>
+    
+                              
+                               
+
+                                
+                                        
+                                   
+                                            
+                                             
+                            <hr>
+                            
+                </div>
+    
+                
+                
+            </div>
+    
+        </section>   
+        
+        <script>
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const darkModeStylesheet = document.getElementById('dark-mode-stylesheet');
+        
+            darkModeToggle.addEventListener('click', () => {
+                const isDarkModeEnabled = darkModeStylesheet.disabled;
+                darkModeStylesheet.disabled = !isDarkModeEnabled;
+            });
+        </script>
+
+        <section class="footer">
+            <div class="numpage">
+                <p class="num">Page 1 of 1</p>
+                <p>© Olaoluwa</p>
+                <!---<hr class="ubad">---->
+    
+                
+            </div>
+            <a title="Google Analytics Alternative" href="https://clicky.com/101412980"><img alt="Clicky" src="//static.getclicky.com/media/links/badge.gif" border="0" /></a>
+            <script async data-id="101412980" src="//static.getclicky.com/js"></script>
