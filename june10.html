@@ -58,9 +58,67 @@
 
                                 <br> <br>
                                 And voila! The paywalled page stays open, letting me read all the juicy details. It's like finding a hidden treasure chest on the internet.
-    
-                               
-    
+                                
+                                
+                                <br> <br>
+                                However, disabling JavaScript in my browser was only a temporary fix. I soon ran into a few more hurdles:
+                                <br> <br>
+
+                                <h4>Scripts Re-injecting the Paywall</h4>
+                                <br>
+                                Even after removing the scripts on the client side, new scripts could be dynamically loaded, re-triggering the paywall. This was the main headache. Imagine thinking you've outsmarted the system 
+                                only to have the paywall pop up again. Ugh!
+                                <br><br>
+                                <h4>CORS Issues</h4>
+                                <br> 
+                                When I tried to fetch resources directly in the browser, Cross-Origin Resource Sharing (CORS) policies kicked in, blocking my access. Websites are pretty strict about where their content can be loaded, and this was a major roadblock.( one would think they don't want me to access a content you` have to pay for);
+                                
+                                <br> <br>
+                                So, what did I do? I decided to bring in the big guns: a backend server.( evil laughs);
+
+                               <a href="">**The code is available on my github  here **</a>
+                               <br>
+                               <h4>How it works</h4>
+                               <br>
+                               <ol>
+                                <li><h5>Fetching Cached Pages:</h5> 
+                                   <p style=" font-family: 'Cardo', serif;"> I set up an Express server that fetches the cached version of any URL I pass to it.</p>
+                                 </li>
+                                 <br>
+
+                                 <li><h5>Stripping Out Scripts</h5> 
+                                    <p style=" font-family: 'Cardo', serif;"> Using the Cheerio library, I remove all the script tags from the cached page. This stops the paywall scripts from re-injecting themselves.</p>
+                                  </li>
+                                  <br>
+
+                                  <div class="box">
+                                    <div class="verse">
+                                    <i>
+                                        When you try to fetch resources directly in the browser from a different origin (domain),
+                                         the browser's same-origin policy kicks in. This policy restricts how resources are loaded
+                                          from different domains to enhance security. If a website doesn't explicitly allow your 
+                                        domain through CORS headers, your browser will block the request.
+                                    </i>
+                                    </div>
+                                    </div>
+
+
+                                  <li><h5>ByPassing CORS</h5> 
+                                    <p style=" font-family: 'Cardo', serif;"> 
+                                       
+                                    
+                                    
+                                    By using a backend server, I make the request to Google's cached page from the server, not the browser. Since the server is not subject to the same-origin policy like a browser, it can fetch resources from any domain without being blocked. Once the server fetches the page, it processes the content (removing script tags in this case) and then sends the cleaned-up content back to the browser.
+                                </p>
+                                  </li>
+                               </ol>
+
+                            <br> <br>   <p  style=" font-family: 'Cardo', serif;">With this setup, I can read those coveted articles without worrying about paywalls or script shenanigans. It’s like having a secret key to unlock all the content I want.
+
+                                <br> <br>    So, if you’re tired of hitting paywalls and have a bit of tech savvy (or a friend who does), give this method a try. It might just open up a whole new world of information for you. Happy reading!</p>
+
+
+
                                 <div style="width:100%;height:0;padding-bottom:55%;position:relative;"><iframe src="https://giphy.com/embed/d3mlE7uhX8KFgEmY" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/culture--think-hmm-d3mlE7uhX8KFgEmY">via GIPHY</a></p>
 
                                 
