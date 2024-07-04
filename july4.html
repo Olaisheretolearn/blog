@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="staple.css">
+    <link rel="icon" href="cuffee.png" type="image/x-icon">
+    <link rel="stylesheet" href="dark-mode.css" id="dark-mode-stylesheet" disabled>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <title>Melancholy Mornings</title>
+
+</head>
+<body>
+    <section class="whole">
+        <div class="container">
+            <div class="menu">
+                <a href="../index.html" class="menu-link">Home</a>
+                <div class="toggle-icon" id="dark-mode-toggle"><i class="fa-solid fa-moon" ></i></div> 
+                <a href="" class="menu-link">Menu</a>
+                
+              </div>
+
+              <section class="two">
+              
+                <div class="actual-container">
+                    <div class="progress-bar"></div>
+    
+                        <h1 class="title">Charged twice? Not nice!</h1>
+
+                        <div class="about">
+                            <p>Olaoluwa Oke| 10 June 2024 </p>
+                            </div>
+                            <div class="data">
+                                <p class="datap">
+
+                                    I used to work at SkipTheDishes , and we had this hilarious thing 
+                                    happen all the time , Customers would call in absolutely livid 
+                                    about being charged twice for the same order or having one order duplicated. (What would they do with two birthday cakes). They would swear up and down that they only placed one order. We heard this so often that we even had a name for it: "Phantom Charge."
+                                     We usually blamed it on a glitchy internet connection, but what was really happening , What mysteriousness  could be causing this double charges , double orders, Honestly , I don't know too exactly, Hell , it could be poor thread management, But what? 
+                               <div class="datap">
+                                <br> <br>
+                                Sure, a wonky internet connection can be the culprit. But there’s more to the story.
+
+                                <br> <br>
+                                First off, let’s talk about server errors. Imagine this: the server is happily processing the order when suddenly, something goes wrong. The customer is left in the dark, unsure if their order went through. If they try again, they might end up with two orders (and two charges).
+                                <br> <br>
+
+                                Then there’s the network error scenario. The server successfully 
+                                processes the order, but thanks to a network hiccup, the confirmation
+                                 doesn’t make it back to the customer. They’re left wondering
+                                  if their order was a success and might hit that order 
+                                button again, leading to—you guessed it—a double charge. <br> <br> 
+
+
+                                Now, how did SkipTheDishes deal with this? Honestly, I’m not sure because I left before the fix was in. But let’s talk about a genius solution they might have used: the idempotent API.
+                                <br> <br>
+                                
+                                SkipTheDishes was hemorrhaging money on double orders and transaction fees from refunds. Enter the idempotent API, a simple solution. It ensures that a request can be retried multiple times without any side effects. One request gets processed exactly once, no matter how many times it’s retried. Here’s how they could have pulled it off
+
+
+
+                                <br> <br>
+                                <h4>1. idempotent Keys</h4>
+                              <br>  <br>
+                                
+                              They’d only process a request if it hadn’t been processed already. To do this, they’d use unique strings (UUIDs) as idempotency keys, sent with each request’s HTTP header. New request? New UUID. These keys act like fingerprints to check if a request has been processed.
+
+                              These idempotency keys would be stored in an in-memory database on the server. Once a request is processed, its response is cached. When a request comes in, the database is queried to see if it’s new. If it’s new, it gets processed and its key is stored. If not, the cached response is returned. They’d also roll back any transactions if a server error happens. To save on storage costs and allow time for retries, idempotency keys would be removed after 24 hours, making them reusable after that period.
+                                <br> <br>
+                                <div class="box">
+                                    <div class="verse">
+                                    <i>
+                                        A Universally Unique Identifier (UUID) is a 128-bit label used for information in computer systems.
+                                        When generated according to the standard methods, UUIDs are, for practical purposes, unique. Their uniqueness does not depend on a central registration authority or coordination between the parties generating them, unlike most other numbering schemes. While the probability that a UUID will be duplicated is not zero, it is generally considered close enough to zero to be negligible.
+                                    </i>
+                                    </div>
+                                    </div>
+                                <br> <br>
+
+                                Here’s the play-by-play: <br> <br>
+
+    <strong>Request Sent</strong>: The customer sends a request to place an order. <br>
+    <strong>Server Checks In-Memory Database</strong>: The server looks for the idempotency key in the in-memory database.<br>
+    &nbsp &nbsp <strong>Key Present</strong>: If the key is found, the server sends the cached result of the processed request. <br>
+    &nbsp &nbsp <strong>Key Not Present</strong>: If the key isn’t found, the server processes the request, sends the response to the customer, and stores the key in the database. <br>
+                                <br>
+                                They’d also roll back any transactions if a server error happens. To save on storage costs and allow time for retries, idempotency keys would be removed after 24 hours, making them reusable after that period.
+                                <br><br>
+
+                                    <img src="Heading(3).png" style="width:80%" alt="">
+
+
+
+                                <h4>2. Retrying Failed Requests</h4>
+                                <br> 
+                                Even though retrying with an idempotency key is safe, it could still overwhelm the server with requests. So, they’d use the exponential backoff algorithm. This means adding a delay before retrying each failed request. To prevent a thundering herd problem, where many clients try to reconnect simultaneously, they’d use jitter to add randomness to the waiting time before a retry.
+                                
+                                <br> <br>
+                              
+                                    <br> <br>
+                                    And that’s how an idempotent API could have turned those Phantom Charges into a thing of the past at SkipTheDishes. No more double orders, no more extra charges, just happy customers all around.
+
+                              
+                               <br>
+                               
+                                <div style="width:100%;height:0;padding-bottom:55%;position:relative;"><iframe src="https://giphy.com/embed/d3mlE7uhX8KFgEmY" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/culture--think-hmm-d3mlE7uhX8KFgEmY">via GIPHY</a></p>
+
+                                
+                                        
+                                   
+                                            
+                                             
+                            <hr>
+                            
+                </div>
+    
+                
+                
+            </div>
+    
+        </section>   
+        
+        <script>
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const darkModeStylesheet = document.getElementById('dark-mode-stylesheet');
+        
+            darkModeToggle.addEventListener('click', () => {
+                const isDarkModeEnabled = darkModeStylesheet.disabled;
+                darkModeStylesheet.disabled = !isDarkModeEnabled;
+            });
+        </script>
+
+        <section class="footer">
+            <div class="numpage">
+                <p class="num">Page 1 of 1</p>
+                <p>© Olaoluwa</p>
+                <!---<hr class="ubad">---->
+    
+                
+            </div>
+            <a title="Google Analytics Alternative" href="https://clicky.com/101412980"><img alt="Clicky" src="//static.getclicky.com/media/links/badge.gif" border="0" /></a>
+            <script async data-id="101412980" src="//static.getclicky.com/js"></script>
