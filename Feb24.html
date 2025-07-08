@@ -28,103 +28,129 @@
                 <div class="actual-container">
                     <div class="progress-bar"></div>
     
-                        <h1 class="title">Ain't nobody got time for that</h1>
+                        <h1 class="title">Day 5 — Completing Task entity, Solved an obvious bug</h1>
                         
                         <div class="about">
-                            <p>Olaoluwa Oke| 14 June 2023 </p>
+                            <p>Olaoluwa Oke| 26 June 2023 </p>
                             </div>
                             <div class="data">
                                 <p class="datap">
+When I sat down to start coding, I just wanted to run the application and see where things stood. But instead, I was met with an authentication error:
 
-                                    I need you to see something before we go ahead haha
-
-                                    <iframe width="560" height="315" 
+                                  <!---  <iframe width="560" height="315" 
                                     src="https://www.youtube.com/embed/bFEoMO0pc7k?si=U63kZPcJ7nKQJb6Z&amp;start=7" title="YouTube video player" 
                                     frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                                    allowfullscreen></iframe>
+                                    allowfullscreen></iframe> --->
 
 
                                     <br> <br>
-                                    This article assumes that you as a reader have some prerequisite knowledge of the Big O notation, We will quickly summarize below what Big O is before we actually move to why we need to drop the constants 
-                                    <br> <br>
-
-                                    Sometimes, a program might feel slow, and you might wonder if it's because the program isn't written well 
-                                    or if the job it's doing is just really tough. 
-                                    These questions help us think about how hard the problem is and which method might be better for solving it.  <br> <br> 
-
-                                    In computer science, understanding the efficiency of algorithms is paramount. 
-                                    A key concept in this analysis is Big O notation, which measures the time and space complexity of algorithms as 
-                                    input size increases.
-                                     This article delves into the role of constants in Big O notation and why they are often disregarded in calculations
-                                    
-                                        <br> <br>
-                                        <div class="box">
+                                       <div class="box">
                                             <div class="verse">
                                             <i>
-                                                Big O notation helps us understand the efficiency of algorithms by measuring their time and space complexity. 
-                                                It's all about figuring out how an algorithm's performance scales as the input size increases.
+                                              "message": "Something went wrong: Exception authenticating MongoCredential{mechanism=SCRAM-SHA-1, userName='...........', source='admin', password=<hidden>, mechanismProperties=<hidden>}", 
+"timestamp": "2025-06-24T20:47:29.095021900Z"
+
                                             </i>
                                             </div>
                                             </div>
+                                    <br> <br>
+
+                                  
                                     </p>
     
                                <div class="datap">
 
-                               <h5 style="text-decoration: underline;">Important concepts</h5>
-                    
-                                <li class="normal">Growth is with respect to the input</li>
-                                <li class="normal">Constants are dropped</li>
-                                <li class="normal">O(2N) -> O(N) and thid makes sense, This is because Big O is meant to describe the upperbound of the algorithm (the growth of tha algorithm ).The constant becomes eventually irrelevant </li>
-                            
+                             
 
                                     <img src="" alt="">
                                
                                     <br> <br>
-                                    Now, let's turn our attention to constants and their significance in Big O notation.
-                                     At first glance, constants might seem important, but when considering 
-                                     the bigger picture of scalability, their impact diminishes. To illustrate this point, imagine two algorithms: one that processes 10 items in 5 seconds, and another that processes 100 items in 50 seconds. It might be tempting to assume the first algorithm is more efficient due to its lower processing time for a smaller input. However, this assumption overlooks the crucial aspect of scalability.
-
+I recognized it immediately. Postman helped, but more importantly, the global exception handler I set up the previous day formatted the error just right. The message was clean. Understandable.
+ That small detail made debugging feel less like guessing
                                 <br> <br>
-                                The truth is, constants do not influence the overall growth rate of an algorithm. 
-                                While they may affect performance with smaller inputs, they become irrelevant when 
-                                dealing with large datasets. This is why constants are typically ignored when calculating 
-                                Big O notation, as the primary goal is to determine an algorithm's growth rate and its ability to 
-                                handle large volumes of data. </li>
+                              My MongoDB connection string had somehow disappeared from my environment variables. I re-added it, but the password I used was wrong. It took about seven minutes to realize I needed to update the credentials in MongoDB Atlas as well. After doing that, everything connected.
                                 <br> <br>
-                                
-                                <h5 style="text-decoration: underline;">Take the following</h5>
-                                N = 1, O(10N) = 10 , O(N^2) = 1
-                                <br>
-                                N = 5, O(10N) = 50 , O(N^2) = 25
-                                <br>
-                                N = 100, O(10N) = 1000, O(N^2) = 10,000 // 10x bigger
-                                <br>
-                                N = 1000, O(10N) = 10,000 O(N^2) = 1,000,000 // 100x bigger
-                                <br>
-                                N = 10000, O(10N) = 100,000 O(N^2) = 100,000,000 // 1000x bigger
+                               Later, I worked on the "mark task as complete" feature. At first, I made a request like this:
+                               
+                         <code>http://localhost:8080/api/task/room/user/68534f4f9c2ee8a8a041f5a5/status?isComplete="false"
+</code>
                                 
                                 <br> <br> I started this blog to share my enthusiasm for the science around computers and programming 
 ,
-                                I largely love Operating Systems, and OOP and this blog will be mainly about these stuff
+                            That wasn’t right.
+
+But there were issues.
+
+For one, false shouldn’t be in quotes. It’s a boolean, not a string. 
+And more importantly, 
+the URL didn’t match the endpoint mapping. My controller was defined as:
                                 <br> <br>
+
+                                <div style="font-family: monospace; background-color: #f5f5f5; padding: 12px; border-radius: 6px;font-size: 12px;">
+  <span style="color: #881391;">@PatchMapping</span><span style="color: #000;">("/{taskId}/complete")</span><br>
+  <span style="color: #000;">fun</span> <span style="color: #005cc5;">markTaskComplete</span>(<br>
+  &nbsp;&nbsp;<span style="color: #881391;">@PathVariable</span> <span style="color: #000;">roomId:</span> <span style="color: #000;">String,</span><br>
+  &nbsp;&nbsp;<span style="color: #881391;">@PathVariable</span> <span style="color: #000;">taskId:</span> <span style="color: #000;">String,</span><br>
+  &nbsp;&nbsp;<span style="color: #881391;">@RequestParam</span> <span style="color: #000;">userId:</span> <span style="color: #000;">String</span><br>
+  )
+</div>
+
                              
-                                I'm a big fan of reading articles shared by Yegor Bugayenko <a href="https://www.yegor256.com/" style="font-weight: bold; color: black; display: flex; flex-direction: row;">here</a>- that guy 
+                                <!--I'm a big fan of reading articles shared by Yegor Bugayenko <a href="https://www.yegor256.com/" style="font-weight: bold; color: black; display: flex; flex-direction: row;">here</a>- that guy 
                                 really knows his stuff! Another favorite of mine is delving into the world of Object-Oriented Programming (OOP)
                                  through the insights of Dr. Tom Butler <a href="https://r.je" style="font-weight: bold; color: black;">here</a> a professor from the University of Northampton.
-                                 These reads add some serious depth to my understanding, and I always find myself coming back for more! 📖✨
+                                 These reads add some serious depth to my understanding, and I always find myself coming back for more! 📖✨-->
 
 
 
                                 <br> <br>
-                
+                And the base route was:
     
                                 <br> <br>
                                 
 
-                                    And hey, if you're feeling like breaking me free from the 9-5 grind and offering an internship, I'm all ears! Shoot me an email, and let's chat about how I can keep bringing those cool ideas to life for you.
-                                 Looking forward to the possibility of diving into more exciting projects together! 
+                                    <div style="font-family: monospace; background-color: #f5f5f5; padding: 12px; border-radius: 6px; font-size:12px ;">
+  <span style="color: #881391;">@RequestMapping</span><span style="color: #000;">("/api/room/{roomId}/task")</span>
+</div>
+<br> <br>
+So the correct URL should’ve been:
+
+<br> <br>
+<code>PATCH http://localhost:8080/api/room/{roomId}/task/{taskId}/complete?userId={userId}
+</code>
+ <br> <br>
+ That worked.
+
+I also finished setting up the main task-related endpoints. These now include: <br>
+
+    createTask <br>
+
+    updateTask <br>
+
+    getTask <br>
+
+    getTasksByRoom <br>
+
+    getCompletedTasksByRoom <br>
+
+    getTasksByRoomAndStatus <br>
+
+    getUpcomingTasks <br>
+
+    markTaskAsComplete<br>
+
+    deleteTask<br>
+
+    regenerateRecurringTasks<br>
+
+    getTasksByUsers<br>
+
+    getTasksByUsersAndStatus<br>
+
+    and so on. The recurring tasks feature still needs more thought, but today was a good step forward.
+
     
-                                <iframe src="https://giphy.com/embed/WOkeXVxkXpQDCYLSOT" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/Ovationtv-inside-the-actors-studio-actorsstudioovation-insidetheactorsstudio-WOkeXVxkXpQDCYLSOT">via GIPHY</a></p></p>
+                               
     
                               
                                

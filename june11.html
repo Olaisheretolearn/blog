@@ -24,79 +24,119 @@
               </div>
 
               <section class="two">
-              
+            
                 <div class="actual-container">
                     <div class="progress-bar"></div>
     
-                        <h1 class="title">Welcome , Hello Visitor</h1>
-                        
+                        <h1 class="title">Day 1 (Part 2)  - DTOs, Global Exceptions Handling and Extension functions</h1>
+
                         <div class="about">
-                            <p>Olaoluwa Oke| 14 June 2023 </p>
+                            <p>Olaoluwa Oke| 20 June 2025 </p>
                             </div>
-                            <div class="data">
+
+                                    <div class="data">
                                 <p class="datap">
-
-                                    Prepare to encounter sacred content, meticulously crafted from the most dependable sources on
-                                     Earth, complemented by the insights from my own mind. ****zippss**  <br> <br> Just kidding  <br> <br> 
-
-
-
-
-
-
-
-                                   Hi , my name is Ola and i am an Undergraduate of Applied Computer Science from the <a href="https://www.uwinnipeg.ca/">University Of Winnipeg</a>
-
-                                    <br><br>
-                                    
-                                    Currently, I got this 9-5 thing that's not exactly about coding,
-                                     but hey, we all gotta do something, right?
-                                    </p>
-    
+                                   I don’t know how I went this long without hearing the term DTO. It stands for Data Transfer Object, but somehow i had not even heard of the concept
+                                   The idea is simple: when data moves between layers like from a controller to the frontend you wrap it in something data appriopriate ( okay that probably didn;t help)
+                                   It kinda just makes sure that you aggregate the data been transferred by several calls to the server(which can be expensive btw) in one call- They are only good for serialization and deserialization
+                                   <br> <br>
+                                   I made four for my room entity <br> 
+                                   <code>RoomCreateRequest</code>
+                                   <code>JoinRequest</code>
+                                   <code>RoomResponse</code>
+                                     <code>RoomUpdateRequest</code>
                                <div class="datap">
+                                <br> 
 
-                                I currently hold the position of a webmaster for the Nigerian chapter of EGM (Engineers based in Manitoba), before that , I was a Technical support representative for Paramount+
-                               
+                                 <div class="box">
+                                <div class="verse">
+                                <i>At first, I wanted to store a list of users inside each Room—List<$User> participants>>. It felt intuitive. But after reading the MongoDB docs and some community threads, I saw the risks: the 16MB document limit and tightly coupled data. If user info changed, every Room they belonged to would need updating. Switching to userId references was simpler, cleaner, and easier to maintain.
+                                </i>
+                                </div>
+                                </div>
+
+                                <h5>Global Exception Handling</h5>
+                                One of the first things I built in this project was error-prone.
+Not because it was poorly written (though maybe it was), but because I didn’t yet know how to fail well.
+                                <br> <br>
+                               Every time something went wrong like wrong ID, missing field, duplicate data, I would throw raw exceptions. And they’d explode across the console like broken glass.It worked, technically. i just needed to upload the entire crash message to chatgpt to parse for me 
+                                <br>  <br>
+                                So I built a GlobalExceptionHandler using @ControllerAdvice. to make it at least, Readable
+
                                 
+                         
+                                
+                              <br> DTOs and Service Layer<br>
+                              So far , we have come from Zero to a room entity , Well almost the same process for user entity , but i will write that as well
+                                <br> <br>
+                                <h5></h5>
+                               Once I had the DTOs in place, the next step was to give them a job.
+Well technically, I had written them because I already had a job for them. Drumroll please... yes: Data Transfer.
+ <br> <br> Shocking, I know.
+ <br> <br>
+ Somewhere along the way, I learned that exposing your entire model to the outside world is a bad idea. It's like handing someone your entire house keychain when all they asked for was the garage. That’s what DTOs solve. You send out just what’s needed
+                               <br> <br>
+                               Which brings us to the next stop:
+                                 <div class="box">
+                                <div class="verse">
+                                <i>
+                                    “sErViCe lAyEr iS wHeRe yOu wRiTe bUsiNeSs rUlEs”
+— This guy on YouTube
+                                </i>
+                                </div>
+                                </div>
 
                                 <br> <br>
-                                During the daily  of 9-5 grind , I'm doing my thing. But as soon as the clock sets me free, it's computer time
-                                 I love tinkering around and making cool stuff </li>
-                                <br> <br>
+                                Well, yes. This is where the actual decisions live. The RoomService became the part of the codebase that does things.
+Want to create a room? Edit one? Join one? Get the details of one?
+That’s all here. <br> <br>
 
-                                I also love to play music -The piano and the guitar, Please don't ask me if I am any good, 
-                                I also love to read random literatures, <br> <br> I started this blog to share my enthusiasm for the science around computers and programming 
-,
-                                I largely love Operating Systems, and OOP and this blog will be mainly about these stuff
-                                <br> <br>
-                             
-                                I'm a big fan of reading articles shared by Yegor Bugayenko <a href="https://www.yegor256.com/" style="font-weight: bold; color: black; display: flex; flex-direction: row;">here</a>- that guy 
-                                really knows his stuff! Another favorite of mine is delving into the world of Object-Oriented Programming (OOP)
-                                 through the insights of Dr. Tom Butler <a href="https://r.je" style="font-weight: bold; color: black;">here</a> a professor from the University of Northampton.
-                                 These reads add some serious depth to my understanding, and I always find myself coming back for more! 📖✨
+<h4> Controllers </h4>
+Controllers - you know , Air Traffic ..... yes , Air Traffic Controllers help direct planes and tell them what runway or where to go generally
+ <br> These guys:
+<br> <br>
+                         <div style="width:60%; height:0; padding-bottom:55%; position:relative;">
+  <img src="images/aircontroller.png" alt="ERD image" style="position:absolute; width:100%; height:100%; object-fit:cover;">
+</div>
+<br> <br>
+Well here too , Our controller , or more specifically , RoomController , tells any request (associated with room) what runway to land
+<br>
+<i style="font-size: 12px;">You want to create a room? Take runway /api/rooms</i> <br>
+<i style="font-size: 12px;">“Trying to join with an invite code? Proceed to /api/rooms/join.”</i> <br>
+<i style="font-size: 12px;" >“Just want to look up a room’s info? That’s gate /api/rooms/{id}.”</i> <br> <br>
 
+I exposed routes 
 
+           <div style="width:100%; height:0; padding-bottom:55%; position:relative;">
+  <img src="images/image-3.png" alt="ERD image" style="position:absolute; width:100%; height:100%; object-fit:cover;">
+</div> <br> <br>
 
-                                <br> <br>
-                
-    
-                                <br> <br>
-                                <div class="box">
-                                    <div class="verse">
-                                    <i>
-                                        By the way, you're welcome to read my thoughts! I'll be mostly diving into the world of OOP and operating Systems, and just a heads up, I try my best to get things right. But hey, we're all human, right? If you ever spot something fishy or
-                                         just wanna chat, shoot me an email at oke-o59@webmail.uwinnipeg.ca. I'm all ears (or, you know, eyes)! 🚀
-                                    </i>
-                                    </div>
-                                    </div>
+<h4>Testing</h4>
+<br>
+Did I test these routes? Yes. I used Postman. <br> <br>
 
-                                    And hey, if you're feeling like breaking me free from the 9-5 grind and offering an internship, I'm all ears! Shoot me an email, and let's chat about how I can keep bringing those cool ideas to life for you.
-                                 Looking forward to the possibility of diving into more exciting projects together! 
-    
-                                <iframe src="https://giphy.com/embed/WOkeXVxkXpQDCYLSOT" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/Ovationtv-inside-the-actors-studio-actorsstudioovation-insidetheactorsstudio-WOkeXVxkXpQDCYLSOT">via GIPHY</a></p></p>
-    
-                              
+    ->Created a room <br>
+
+    ->Joined using a valid invite code <br>
+
+    ->Tried an invalid code <br>
+
+    ->Tried joining the same room twice <br>
+
+    ->Updated the room name <br> <br>
+
+All the expected behaviors worked. Error handling also returned the correct status codes (404 for not found, 409 for duplicate join).
+<br> <br>
+Did I write unit tests?
+No. I don’t know how to write them yet.
+
+That’s something I plan to learn after authentication is done. Right now, I’m relying on manual testing to validate logic.
+
+<br> <br>
+See you on Day 2
                                
+                             
+
 
                                 
                                         

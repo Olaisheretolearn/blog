@@ -28,100 +28,90 @@
                 <div class="actual-container">
                     <div class="progress-bar"></div>
     
-                        <h1 class="title">Access Paywalled content</h1>
+                        <h1 class="title">Day 1 - Implementing the Room Entity in Awa</h1>
 
                         <div class="about">
-                            <p>Olaoluwa Oke| 10 June 2024 </p>
+                            <p>Olaoluwa Oke| 19 June 2025 </p>
                             </div>
-                            <div class="data">
+
+                                    <div class="data">
                                 <p class="datap">
-
-    So, something funny happened the other day. A friend searched my name on Google and, to my surprise, pictures of me popped up. Not just any pictures, but ones I had deleted from LinkedIn ages ago. I thought I had erased those awkward photos for good, but there they were, in all their cringy glory. How? Why? What is this sorcery?
+                                    A few hours into writing the Room model, I realized 
+                                     I was literally  describing a household. like the shape of shared space
                                <div class="datap">
-
-                           
-
-                                <br> <br>
-                                Turns out, Google has this thing called a web crawler. It's like a little internet robot that zooms around the web, checking out new pages and saving copies of them. These copies are called cached versions. So even if you delete something, Google might still have a backup of it. Thanks, Google. Really appreciate it.
-                                <br> <br>
-
-                                Anyway, this got me thinking. If Google can cache pages from LinkedIn, maybe it does the same for other websites. You know, the ones with annoying paywalls? Most websites want to show up in Google search results, so they let the web crawler in. And bingo! The crawler saves 
-                                a version of the page that isn't paywalled. <br> <br> 
-
-
-                                Here’s where it gets interesting. I realized I could access these cached versions and read the full articles without paying a dime. Just a little trick I stumbled upon in my quest to find my lost photos.
-                                <br> <br>
-                                
-                                But there's a catch. As soon as the cached page loads, it quickly updates and throws the paywall back in my face. Talk about frustrating! But I found a way around that too. All I had to do was disable JavaScript. Sounds technical, but it's super easy. Just go to your browser settings, find the JavaScript option, and turn it off.
-
-
-
-                                <br> <br>
-                                And voila! The paywalled page stays open, letting me read all the juicy details. It's like finding a hidden treasure chest on the internet.
-                                
-                                
-                                <br> <br>
-                                However, disabling JavaScript in my browser was only a temporary fix. I soon ran into a few more hurdles:
-                                <br> <br>
-
-                                <h4>Scripts Re-injecting the Paywall</h4>
-                                <br>
-                                Even after removing the scripts on the client side, new scripts could be dynamically loaded, re-triggering the paywall. This was the main headache. Imagine thinking you've outsmarted the system 
-                                only to have the paywall pop up again. Ugh!
-                                <br><br>
-                                <h4>CORS Issues</h4>
                                 <br> 
-                                When I tried to fetch resources directly in the browser, Cross-Origin Resource Sharing (CORS) policies kicked in, blocking my access. Websites are pretty strict about where their content can be loaded, and this was a major roadblock.( one would think they don't want me to access a content you` have to pay for);
-                                
+                                There’s a concept in HCI called an interface metaphor. 
+                                It’s when you design something in code that mimics how things work in real life, 
+                                so people don’t have to re-learn everything from scratch
                                 <br> <br>
-                                <div class="box">
+                               Anyways, So I thought- what would a household have? . at least , THIS type of household
+                                <br>  <br>
+                             Well, it would have a name. Most houses don’t, but this one needs to, It would have an owner or overseer. Someone who started the space and feels a tiny bit responsible for it,It would have members. It also would have a key, something like an invite code.
+                              And finally, it would have a timestamp. (dont ask me what the equivalent of that is)
+
+                                <br> <br> 
+                                So I wrote this: 
+
+                    
+                                <div style="width:100%; height:0; padding-bottom:55%; position:relative;">
+  <img src="images/image-1.png" alt="ERD image" style="position:absolute; width:100%; height:100%; object-fit:cover;">
+</div>
+
+<br> <br>
+Each room has an ownerId (the user who created it), and a list of memberIds. 
+A room doesn’t exist in isolation someone starts it, and others are invited in. 
+The inviteCode is like  a key. I didn’t want it to be random long gibberish id,
+ so I wrote a short utility:
+
+      <div class="box">
                                     <div class="verse">
                                     <i>
-                                        When you try to fetch resources directly in the browser from a different origin (domain),
-                                         the browser's same-origin policy kicks in. This policy restricts how resources are loaded
-                                          from different domains to enhance security. If a website doesn't explicitly allow your 
-                                        domain through CORS headers, your browser will block the request.
+                                        <code>fun generateInviteCode(length: Int = 6): String { <br> 
+    val chars = ('a'..'z') + ('0'..'9') <br>
+    return (1..length).map { chars.random() }.joinToString("") <br>
+}
+</code>
                                     </i>
                                     </div>
                                     </div>
-                                    <br> <br>
-                                So, what did I do? I decided to bring in the big guns: a backend server.( evil laughs);
+      
 
-                               <a href="https://github.com/Olaisheretolearn/PeekThrough/blob/main/server.js">**The code is available on my github  here **</a>
+                                <br> <br>
+Readable. Shareable
+<br> <br>
+Before wiring up the service layer, I created a RoomRepository that extends MongoRepository with one query method " findByCode" .
+
+<br> <br>
+Room Creation & Join Flow:
+I wrote the RoomService to handle the logic of: <br>
+
+    ->creating a room, <br>
+
+    ->generating a unique invite code, <br>
+
+    ->adding the creator as the owner and first member. <br> <br>
+
+When someone else joins using the invite code, the flow:<br>
+
+    ->fetches the room by code,<br>
+
+    ->checks if the user is already a member,<br>
+
+    ->appends them to the memberIds,<br>
+
+    ->updates their roomId field in the User collection.<br>
+
+                                
+                         
+                                
+                              <br> <br>
+                              Catch you in the part 2 lol
+                                
+
                                <br>
-                               <h4>How it works</h4>
-                               <br>
-                               <ol>
-                                <li><h5>Fetching Cached Pages:</h5> 
-                                   <p style=" font-family: 'Cardo', serif;"> I set up an Express server that fetches the cached version of any URL I pass to it.</p>
-                                 </li>
-                                 <br>
-
-                                 <li><h5>Stripping Out Scripts</h5> 
-                                    <p style=" font-family: 'Cardo', serif;"> Using the Cheerio library, I remove all the script tags from the cached page. This stops the paywall scripts from re-injecting themselves.</p>
-                                  </li>
-                                  <br>
-
+                               
                              
 
-
-                                  <li><h5>ByPassing CORS</h5> 
-                                    <p style=" font-family: 'Cardo', serif;"> 
-                                       
-                                    
-                                    
-                                    By using a backend server, I make the request to Google's cached page from the server, not the browser. Since the server is not subject to the same-origin policy like a browser, it can fetch resources from any domain without being blocked. Once the server fetches the page, it processes the content (removing script tags in this case) and then sends the cleaned-up content back to the browser.
-                                </p>
-                                  </li>
-                               </ol>
-
-                            <br> <br>   <p  style=" font-family: 'Cardo', serif;">With this setup, I can read those coveted articles without worrying about paywalls or script shenanigans. It’s like having a secret key to unlock all the content I want.
-
-                                <br> <br>    So, if you’re tired of hitting paywalls and have a bit of tech savvy (or a friend who does), give this method a try. It might just open up a whole new world of information for you. Happy reading!</p>
-
-
-
-                                <div style="width:100%;height:0;padding-bottom:55%;position:relative;"><iframe src="https://giphy.com/embed/d3mlE7uhX8KFgEmY" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/culture--think-hmm-d3mlE7uhX8KFgEmY">via GIPHY</a></p>
 
                                 
                                         

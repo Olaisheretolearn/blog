@@ -28,85 +28,66 @@
                 <div class="actual-container">
                     <div class="progress-bar"></div>
     
-                        <h1 class="title">Charged twice? Not nice!</h1>
+                        <h1 class="title">Day 0 - Ideation and Conceptual Modelling</h1>
 
                         <div class="about">
-                            <p>Olaoluwa Oke| 10 June 2024 </p>
+                            <p>Olaoluwa Oke| 18 June 2025 </p>
                             </div>
+
                             <div class="data">
                                 <p class="datap">
-
-                                    I used to work at SkipTheDishes , and we had this hilarious thing 
-                                    happen all the time , Customers would call in absolutely livid 
-                                    about being charged twice for the same order or having one order duplicated. (What would they do with two birthday cakes). They would swear up and down that they only placed one order. We heard this so often that we even had a name for it: "Phantom Charge."
-                                     We usually blamed it on a glitchy internet connection, but what was really happening , What mysteriousness  could be causing this double charges , double orders, Honestly , I don't know too exactly, Hell , it could be poor thread management, But what? 
+                                    A few months ago, my roommate left a passive-aggressive sticky note on the fridge because someone kept using his oat milk. 
+                                    There are only two of us. And I’m allergic to oats.
                                <div class="datap">
-                                <br> <br>
-                                Sure, a wonky internet connection can be the culprit. But there’s more to the story.
-
-                                <br> <br>
-                                First off, let’s talk about server errors. Imagine this: the server is happily processing the order when suddenly, something goes wrong. The customer is left in the dark, unsure if their order went through. If they try again, they might end up with two orders (and two charges).
-                                <br> <br>
-
-                                Then there’s the network error scenario. The server successfully 
-                                processes the order, but thanks to a network hiccup, the confirmation
-                                 doesn’t make it back to the customer. They’re left wondering
-                                  if their order was a success and might hit that order 
-                                button again, leading to—you guessed it—a double charge. <br> <br> 
-
-
-                                Now, how did SkipTheDishes deal with this? Honestly, I’m not sure because I left before the fix was in. But let’s talk about a genius solution they might have used: the idempotent API.
-                                <br> <br>
-                                
-                                SkipTheDishes was hemorrhaging money on double orders and transaction fees from refunds. Enter the idempotent API, a simple solution. It ensures that a request can be retried multiple times without any side effects. One request gets processed exactly once, no matter how many times it’s retried. Here’s how they could have pulled it off
-
-
-
-                                <br> <br>
-                                <h4>1. idempotent Keys</h4>
-                              <br>  <br>
-                                
-                              They’d only process a request if it hadn’t been processed already. To do this, they’d use unique strings (UUIDs) as idempotency keys, sent with each request’s HTTP header. New request? New UUID. These keys act like fingerprints to check if a request has been processed.
-
-                              These idempotency keys would be stored in an in-memory database on the server. Once a request is processed, its response is cached. When a request comes in, the database is queried to see if it’s new. If it’s new, it gets processed and its key is stored. If not, the cached response is returned. They’d also roll back any transactions if a server error happens. To save on storage costs and allow time for retries, idempotency keys would be removed after 24 hours, making them reusable after that period.
-                                <br> <br>
-                                <div class="box">
-                                    <div class="verse">
-                                    <i>
-                                        A Universally Unique Identifier (UUID) is a 128-bit label used for information in computer systems.
-                                        When generated according to the standard methods, UUIDs are, for practical purposes, unique. Their uniqueness does not depend on a central registration authority or coordination between the parties generating them, unlike most other numbering schemes. While the probability that a UUID will be duplicated is not zero, it is generally considered close enough to zero to be negligible.
-                                    </i>
-                                    </div>
-                                    </div>
-                                <br> <br>
-
-                                Here’s the play-by-play: <br> <br>
-
-    <strong>Request Sent</strong>: The customer sends a request to place an order. <br>
-    <strong>Server Checks In-Memory Database</strong>: The server looks for the idempotency key in the in-memory database.<br>
-    &nbsp &nbsp <strong>Key Present</strong>: If the key is found, the server sends the cached result of the processed request. <br>
-    &nbsp &nbsp <strong>Key Not Present</strong>: If the key isn’t found, the server processes the request, sends the response to the customer, and stores the key in the database. <br>
-                                <br>
-                                They’d also roll back any transactions if a server error happens. To save on storage costs and allow time for retries, idempotency keys would be removed after 24 hours, making them reusable after that period.
-                                <br><br>
-
-                                    <img src="Heading(3).png" style="width:80%" alt="">
-
-
-
-                                <h4>2. Retrying Failed Requests</h4>
                                 <br> 
-                                Even though retrying with an idempotency key is safe, it could still overwhelm the server with requests. So, they’d use the exponential backoff algorithm. This means adding a delay before retrying each failed request. To prevent a thundering herd problem, where many clients try to reconnect simultaneously, they’d use jitter to add randomness to the waiting time before a retry.
-                                
-                                <br> <br>
-                              
-                                    <br> <br>
-                                    And that’s how an idempotent API could have turned those Phantom Charges into a thing of the past at SkipTheDishes. No more double orders, no more extra charges, just happy customers all around.
+                                I laughed when I saw it, then got a little sad. Not because of the oat milk (though that stuff is expensive), 
+                                but because that note felt like a summary of every shared living space I’ve been in: 
+                                quiet frustrations, unspoken tensions, and the subtle art of avoiding direct conversations.
 
+                                <br> <br>
+                                 It reminded me of this boy I lived with during my first year. He always cleaned the bathroom without saying a word. Just did it. Every weekend. One day, I thanked him and he looked genuinely surprised, 
+                                 like no one had ever noticed.
+                                <br>  <br>
+                                He said, <i>“Well, I figured someone should.”</i> <br> <br>
+
+                                I asked him why he never asked anyone else to take turns. <br> <br> 
+                                He shrugged. <i>“Don’t like fights.”</i> <br> <br>
+
+                                And that was that. The guy scrubbed toilets in silence for an entire semester because the idea of saying “Can we rotate this?” felt heavier than cleaning <br>  <br>
+
+
+
+Awa is a housemate app, but I think of it more like a soft place 
+to land. It plays on the word “our” or even the Yoruba word for “us.” Something 
+shared. Something mutual
+                                <br> <br>
+                                
+                               Today I sketched out the entity models - Users, Rooms, Tasks, Bills, shoppingItem. I even drew up an ERD with crow’s foot notation, which made me feel oddly proud lmao
+
+                               <br> <br>
+                                <div style="width:100%; height:0; padding-bottom:55%; position:relative;">
+  <img src="images/erd.png" alt="ERD image" style="position:absolute; width:100%; height:100%; object-fit:cover;">
+</div>
+
+<br> <br>
+I also started the foundational steps of generating a zip file from start.spring.io, Figured out my  needed dependencies, connected my barebones to the MongoDB database cluster, kept my connection string in my environmental variable file
+
+<br> <br>
+I know I’m not the first person to try this. There are apps out there e.g Flatify, Dwell, a few others. But I’ve tried them, and honestly? They don’t feel built for real people. Flatify is clunky, overloaded with forms and dropdowns that make you feel like you’re doing admin work, not trying to live in peace. Dwell is cleaner, I’ll give it that. It has promise. But let’s see. 
+
+
+                                <br> <br>
+A friend of mine says they’ll handle the frontend in Flutter. They’ve promised, at least. We’ll see. I’m learning not to rush people when the work is unpaid and the vision still lives mostly in your head. But I’m hopeful. 
+                                
+                         
+                                
                               
+                                
+
                                <br>
                                
-                                <div style="width:100%;height:0;padding-bottom:55%;position:relative;"><iframe src="https://giphy.com/embed/d3mlE7uhX8KFgEmY" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/culture--think-hmm-d3mlE7uhX8KFgEmY">via GIPHY</a></p>
+                             
+
 
                                 
                                         
