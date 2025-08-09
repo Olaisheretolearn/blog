@@ -36,9 +36,18 @@
 
                                     <div class="data">
                                 <p class="datap">
-                                   I don’t know how I went this long without hearing the term DTO. It stands for Data Transfer Object, but somehow i had not even heard of the concept
-                                   The idea is simple: when data moves between layers like from a controller to the frontend you wrap it in something data appriopriate ( okay that probably didn;t help)
-                                   It kinda just makes sure that you aggregate the data been transferred by several calls to the server(which can be expensive btw) in one call- They are only good for serialization and deserialization
+                                  I don’t know how I went this long without hearing the term DTO. 
+                                  It stands for Data Transfer Object, and somehow I had never encountered it.
+                                   <br> <br>
+
+                                   The idea sounds almost too obvious in hindsight: when data moves between layers  say, from your controller to the frontend you don’t 
+                                   just hand over your full model. You wrap it in a structure designed for that exact transfer.
+
+                                   <br> <br>
+                                   At first, I lowkey thought DTOs were about making things neat. But then I realized they’re also about also mking things efficent like by aggregating multiple pieces of related 
+                                   data so the client doesn’t have to make several expensive round trips ,to the server. And, importantly, they’re about exposure control: sending only what’s needed, nothing more.
+                                   <br> <br>
+                                    For my Room entity, I made four:
                                    <br> <br>
                                    I made four for my room entity <br> 
                                    <code>RoomCreateRequest</code>
@@ -48,20 +57,19 @@
                                <div class="datap">
                                 <br> 
 
+
+
                                  <div class="box">
                                 <div class="verse">
-                                <i>At first, I wanted to store a list of users inside each Room—List<$User> participants>>. It felt intuitive. But after reading the MongoDB docs and some community threads, I saw the risks: the 16MB document limit and tightly coupled data. If user info changed, every Room they belonged to would need updating. Switching to userId references was simpler, cleaner, and easier to maintain.
-                                </i>
+                                <i> I initially wanted to store a List<%User> directly inside each Room. It felt intuitive. But MongoDB’s 16MB document limit and the risk of tight coupling (duplicating user info in every room they belong to) convinced me otherwise. If a user changed their name, I’d have to update that data in multiple places — a maintenance nightmare. Switching to userId references made the model looser, more maintainable, and aligned with single source of truth principles.</i>
                                 </div>
                                 </div>
 
                                 <h5>Global Exception Handling</h5>
-                                One of the first things I built in this project was error-prone.
-Not because it was poorly written (though maybe it was), but because I didn’t yet know how to fail well.
+                                In the early days, when something went wrong missing ID, invalid field, duplicate entry  I just threw raw exceptions.
+                                 Technically it worked, but it was ugly. Debugging was just  pasting crash logs into ChatGPT just to make sense of them.
                                 <br> <br>
-                               Every time something went wrong like wrong ID, missing field, duplicate data, I would throw raw exceptions. And they’d explode across the console like broken glass.It worked, technically. i just needed to upload the entire crash message to chatgpt to parse for me 
-                                <br>  <br>
-                                So I built a GlobalExceptionHandler using @ControllerAdvice. to make it at least, Readable
+                             
 
                                 
                          
@@ -74,10 +82,24 @@ Not because it was poorly written (though maybe it was), but because I didn’t 
 Well technically, I had written them because I already had a job for them. Drumroll please... yes: Data Transfer.
  <br> <br> Shocking, I know.
  <br> <br>
- Somewhere along the way, I learned that exposing your entire model to the outside world is a bad idea. It's like handing someone your entire house keychain when all they asked for was the garage. That’s what DTOs solve. You send out just what’s needed
-                               <br> <br>
-                               Which brings us to the next stop:
-                                 <div class="box">
+
+ The RoomService acts as the orchestration layer, enforcing business rules and coordinating repository calls for all room-related actions (create, edit, join, lookup).
+Controllers handle routing, directing HTTP requests to the right service methods.
+
+Postman tests covered:
+
+    Creating a room
+
+    Joining with valid/invalid invite codes
+
+    Preventing duplicate joins
+
+    Updating a room name
+
+All behaviors worked, returning proper HTTP codes (404 for not found, 409 for duplicate join).
+Unit tests aren’t in place yet — manual testing is used until authentication is implemented.
+
+<br> <br>       
                                 <div class="verse">
                                 <i>
                                     “sErViCe lAyEr iS wHeRe yOu wRiTe bUsiNeSs rUlEs”

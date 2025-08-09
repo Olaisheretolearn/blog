@@ -55,28 +55,160 @@
 
                                 And that was that. The guy scrubbed toilets in silence for an entire semester because the idea of saying “Can we rotate this?” felt heavier than cleaning <br>  <br>
 
-
-
-Awa is a housemate app, but I think of it more like a soft place 
-to land. It plays on the word “our” or even the Yoruba word for “us.” Something 
-shared. Something mutual
+Awa is meant to be a counterweight to that silence.
+Yes, it’s a “housemate app,” but I think of it as a soft place to land. The name plays on “our,” and in Yoruba, “awa” means us. Something shared. Something mutual.
                                 <br> <br>
-                                
-                               Today I sketched out the entity models - Users, Rooms, Tasks, Bills, shoppingItem. I even drew up an ERD with crow’s foot notation, which made me feel oddly proud lmao
+
+<hr>
+
+                                <h3>Technical Architecture — Version 0.1</h3> <br>
+                                Author: Olaoluwa Oke <br>
+                                Date: 18 June 2025 <br> <br>
+
+
+                                <h4>1. Overview</h4>
+                                The Awa Backend is a Spring Boot application written in Kotlin, backed
+                                 by MongoDB Atlas, designed to manage household coordination: tasks, bills, 
+                                 shopping items, and member interactions.
+                                 It exposes a RESTful API consumed by a Flutter frontend. <br> <br>
+                                 Today was the first structural commit.
+I began with a blank slate at start.spring.io, generating a barebones Spring Boot project as a ZIP archive. Chose Kotlin as the language, 
+Gradle as the build tool, and Java 17 as the runtime baseline. <br> <br>
+
+                                  <h4>2. Technology Stack </h4>
+                                <div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Layer</th>
+        <th>Technology</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Language</td>
+        <td>Kotlin</td>
+        <td>Target JVM 17</td>
+      </tr>
+      <tr>
+        <td>Framework</td>
+        <td>Spring Boot 3.x</td>
+        <td>Application framework</td>
+      </tr>
+      <tr>
+        <td>Build Tool</td>
+        <td>Maven</td>
+        <td>Dependency management</td>
+      </tr>
+      <tr>
+        <td>Database</td>
+        <td>MongoDB Atlas</td>
+        <td>Cloud-hosted NoSQL</td>
+      </tr>
+      <tr>
+        <td>Security</td>
+        <td>Spring Security + JWT</td>
+        <td>Authentication &amp; authorization</td>
+      </tr>
+      <tr>
+        <td>Validation</td>
+        <td>JSR-380 (Hibernate Validator)</td>
+        <td>DTO validation</td>
+      </tr>
+      <tr>
+        <td>Dev Tools</td>
+        <td>Spring Boot DevTools</td>
+        <td>Hot reload for development</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<br> <br>
+               <h4>3. Dependencies</h4>      <br>
+               <ol>
+ <li style="font-family: 'Cardo', serif;"><strong style="font-family: 'Cardo', serif;">spring-boot-starter-web</strong> — REST API support.</li>
+<li style="font-family: 'Cardo', serif;"><strong style="font-family: 'Cardo', serif;">spring-boot-starter-data-mongodb</strong> — MongoDB ODM.</li>
+<li style="font-family: 'Cardo', serif;"><strong style="font-family: 'Cardo', serif;">spring-boot-starter-validation</strong> — Request validation.</li>
+<li style="font-family: 'Cardo', serif;"><strong style="font-family: 'Cardo', serif;">spring-boot-starter-security</strong> — Security configuration (future JWT integration).</li>
+<li style="font-family: 'Cardo', serif;"><strong style="font-family: 'Cardo', serif;">spring-boot-devtools</strong> — Hot reload for development.</li>
+
+</ol>
+<br> <br>
+<h4>4. Environment Configuration</h4>     
+        <li style="font-family: 'Cardo', serif;">Connection string stored in .env file.</li>       
+        <li style="font-family: 'Cardo', serif;">Accessed via System.getenv("MONGODB_URI").</li> 
+        <li style="font-family: 'Cardo', serif;">Injected into application.properties:</li> 
+
+        <br> <br>
+        <pre style="background-color: #f5f5f5; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 14px; color: #333;">
+spring.data.mongodb.uri=${MONGODB_URI}
+</pre>
+
+<br> <br>
+<h4>5. Domain Model (ERD)</h4><br> 
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Entity</th>
+        <th>Key Fields</th>
+        <th>Relationships</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>User</td>
+        <td>id, username, email, passwordHash, joinedRooms</td>
+        <td>n..m with Room</td>
+      </tr>
+      <tr>
+        <td>Room</td>
+        <td>id, name, createdBy, memberIds</td>
+        <td>1..n with Task, Bill, ShoppingItem</td>
+      </tr>
+      <tr>
+        <td>Task</td>
+        <td>id, roomId, title, dueDate, assignees, status</td>
+        <td>n..1 Room</td>
+      </tr>
+      <tr>
+        <td>Bill</td>
+        <td>id, roomId, description, totalAmount, payerId, splitDetails</td>
+        <td>n..1 Room</td>
+      </tr>
+      <tr>
+        <td>ShoppingItem</td>
+        <td>id, roomId, name, quantity, purchased, linkedBillId</td>
+        <td>n..1 Room</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+                               
 
                                <br> <br>
                                 <div style="width:100%; height:0; padding-bottom:55%; position:relative;">
   <img src="images/erd.png" alt="ERD image" style="position:absolute; width:100%; height:100%; object-fit:cover;">
 </div>
+<br> <br>
+<h4>6. Security</h4> 
+<li style="font-family: 'Cardo', serif;">Authentication: JWT (planned, not yet implemented).</li>       
+        <li style="font-family: 'Cardo', serif;">Authorization: Role-based access control (RBAC) planned.</li> 
+        <li style="font-family: 'Cardo', serif;">Password storage: BCrypt hashing via PasswordEncoder bean.</li>
 
 <br> <br>
-I also started the foundational steps of generating a zip file from start.spring.io, Figured out my  needed dependencies, connected my barebones to the MongoDB database cluster, kept my connection string in my environmental variable file
-
-<br> <br>
-I know I’m not the first person to try this. There are apps out there e.g Flatify, Dwell, a few others. But I’ve tried them, and honestly? They don’t feel built for real people. Flatify is clunky, overloaded with forms and dropdowns that make you feel like you’re doing admin work, not trying to live in peace. Dwell is cleaner, I’ll give it that. It has promise. But let’s see. 
-
-
-                                <br> <br>
+<h4>7. Market Context & Differentiation</h4> 
+I’ve trialed competitors — Flatify, Dwell.
+Flatify feels like an overzealous property management system disguised as a 
+roommate app — form-heavy, slow, requiring excessive user input for simple interactions.
+ Dwell is cleaner, but its 
+design language still orbits administrative precision rather than human ease.
+                                
 A friend of mine says they’ll handle the frontend in Flutter. They’ve promised, at least. We’ll see. I’m learning not to rush people when the work is unpaid and the vision still lives mostly in your head. But I’m hopeful. 
                                 
                          
