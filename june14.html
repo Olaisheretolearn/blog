@@ -39,11 +39,23 @@
                                   That’s probably because I wrote it on Day One — fast. Mostly because
                                    I had already written something nearly identical
                                     for my bookmarking app, Tabitha.The style carried over nicely. And with the ERD already sketched out, this really wasn’t uncharted territory.
-                                    </p>
+                                    
+
+                                    <br> <br>
+                                    The model is intentionally plain: identity, contact, auth, membership, lifecycle.
+                                    <br> <br>
+                                    Auth is next on the runway, so I wanted the substrate ready: stable fields, predictable lookups, and password handling that won’t make future-me wince.
     
                                <div class="datap">
                                <br> <br>
                                The User entity is pretty standard: <br>
+
+                               </p>
+<hr>
+                               <h4>Technical Log</h4>
+                               <h5>(1) Domain Model</h5>
+
+
 
                                <code>id</code>
                                <code>firstName</code>
@@ -56,45 +68,82 @@
                              
                                <br> <br>
 
-                               I also created a Role enum in the same file. 
+                               <pre style="background-color: #f5f5f5; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 14px; color: #333; overflow-x: auto;">enum class Role { OWNER, MEMBER }</pre>
 
-In the UserRepository, I exposed two queries: <br>
 
-    <code>findByEmailIgnoreCase</code> 
 
-    <code>findByRoomId</code> (We’ll come back to why later.) <br> <br>
+                               <h4>2. Repository Layer</h4>
 
-So why am I talking about the User entity now?
+                               <br>
+
+                               <pre style="background-color: #f5f5f5; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 14px; color: #333; overflow-x: auto;">interface UserRepository : MongoRepository<%User, String> {
+    fun findByEmailIgnoreCase(email: String): User?
+    fun findByRoomId(roomId: String): List<%User>
+}
+</pre>
+
+                               <br> <br>
+ <li style="font-family: 'Cardo', serif;">findByEmailIgnoreCase backs login flows and signup duplicate checks.</li>
+ <li style="font-family: 'Cardo', serif;">findByRoomId powers room membership views and role computations (e.g., first joiner = OWNER).</li>
+ <br> <br>
+
+  <h4>(3) Password Handling (BCrypt)</h4>
+   <li style="font-family: 'Cardo', serif;">Store only one-way hashes (BCrypt). No reversible encoding, no salts managed by you—BCrypt handles per-hash salts and cost factor..</li>
+    <li style="font-family: 'Cardo', serif;">Minimal API surface in a PasswordService:</li>
+    encode(raw: String): String <br>
+    matches(raw: String, hash: String): Boolean <br> <br>
+
+    Rationale : 
+    <li style="font-family: 'Cardo', serif;">Resistant to rainbow tables and supports work factor tuning (cost) as hardware improves.</li>
+    <li style="font-family: 'Cardo', serif;">Keeps auth concerns cohesive and testable, separate from controllers/services.</li>
+ <br> <br>
+
+  <h4>(4) DTOs (Auth-Adjacent)</h4> <br>
+<li style="font-family: 'Cardo', serif;">UserCreateRequest(firstName, email, password) → input</li>
+<li style="font-family: 'Cardo', serif;">UserResponse(id, firstName, email, roomId, role, joinedAt, isActive) → output</li>
+<li style="font-family: 'Cardo', serif;">(Auth-specific DTOs will arrive with the auth feature: LoginRequest, AuthResponse w/ JWT.)</li>
+
+ <br>
+  Principles
+  <li style="font-family: 'Cardo', serif;"> Prevent overexposure of internals (never leak password/hash).</li>
+   <li style="font-family: 'Cardo', serif;">Keep API contracts stable while entities evolve.</li>
+
+<br> <br>
+<h4>(5) Service Layer (UserService)</h4>
+Injected deps: UserRepository, RoomRepository (see note below).
+<br>
+ <li style="font-family: 'Cardo', serif;"> createUser(req: UserCreateRequest): UserResponse</li>
+    Lowercase + validate email, enforce uniqueness, password = bcrypt.encode(...), default isActive = true, role = MEMBER, joinedAt = now()
+<li style="font-family: 'Cardo', serif;"> deactivateUser(userId): Unit → sets isActive = false (idempotent).</li>
+<li style="font-family: 'Cardo', serif;">updateUser(userId, patch): UserResponse → constrained fields (no direct role escalations here).</li>
+<li style="font-family: 'Cardo', serif;">getUsersInRoom(roomId): List<%UserResponse></li>
+<li style="font-family: 'Cardo', serif;">joinRoom(userId, code): UserResponse</li>
+Guards: user not already in a room; room exists; assign Role.OWNER if first member else MEMBER; single write to User (no dual writes) <br>
+Uses userRepository.findByRoomId(room.id) to determine role.
+<br> <br>
+Why inject RoomRepository here?
+
+<li style="font-family: 'Cardo', serif;">The join flow needs to resolve and validate the target room by code/ID and may apply future room-level invariants (e.g., capacity, status, invite TTL). Keeping that lookup centralized in the service avoids controller-level anemic logic and keeps business rules cohesive.</li> <br>
+<li style="font-family: 'Cardo', serif;">More in the next entry when auth & room constraints kick in.</li>
 
 <br> <br>
 
+<h4>(6) Validation & Errors</h4>
+<li style="font-family: 'Cardo', serif;">Email format + normalization (lowercase).</li>
+<li style="font-family: 'Cardo', serif;">Unique email → map duplicate key to 409.</li>
+<li style="font-family: 'Cardo', serif;">Not found → 404; already in a room → 409.</li>
+<li style="font-family: 'Cardo', serif;">Centralized via @ControllerAdvice returning a compact error payload.</li>
+
+ <br> <br>
+<h4>(7) Security Posture (pre-auth)</h4>
+<li style="font-family: 'Cardo', serif;">Never return password or security-adjacent fields in responses.</li>
+<li style="font-family: 'Cardo', serif;">Start failing closed: endpoints require auth once JWT lands; until then, keep mutation endpoints behind a temporary gate (e.g., dev profile).</li>
+
+
+
+
+
     
-                              Authentication’s around the corner and io wanted to just lay the foundation for that
-                                <br> <br>
-                          <h4>Password Encoding</h4>
-                          
-                          You’ve probably heard that passwords shouldn’t be stored in plain text for obvious reasons ( if you get hacked , the bad actors have access to all the account passwords). Well,
-                           Back in the day, people encoded passwords, but those fell to rainbow tables. Now, we use one-way hashing
-                                <br> <br>
-                                Spring offers a few options, but I went with the popular one: <strong>BCryptPasswordEncoder</strong>.
-<br>It’s the guy in town now, and it does the job.
-
-I wrote two simple methods: <br>
-
-    <code>encode(rawPassword)</code> <br>
-     <code>matches(rawInput, hashedPassword)</code><br>
-
-That’s all for now. You just encode what comes in and compare it to what’s saved. Like I said, deeper security discussion comes later.
-    
-                                <br> <br>
-                                <h4>User Service Layer</h4>
-                                 Here, I injected two dependencies:(UserRepository,RoomRepository)
-                                 and i had methods like <br>
-                                 <code>Create user</code><br>
-                                 <code>Deactivate user (isActive attribute)</code><br>
-                                 <code>Update User</code><br>
-                                 <code>GetUsersInARoom</code><br>
-                                 <code>JoinARoom</code> - made sure you can only join a room once <br>
                                 <div style="width:10 0%; height:0; padding-bottom:55%; position:relative;">
   <img src="images/image-4.png" alt="ERD image" style="position:absolute; width:100%; height:100%; object-fit:cover;">
 </div>
@@ -103,12 +152,11 @@ That’s all for now. You just encode what comes in and compare it to what’s s
 
                                  <code></code>
 
-                                <br> <br>
-                                (DI in Kotlin is pleasantly smooth compared to Java, by the way.)
+                               
                                
     
                                 <br> <br>
-                                Why inject RoomRepository? , it's not like i cannot inject what i want , or maybe the fact that i needed to get users in a room but , I’ll explain in the next entry
+                                
     
                                         </code>
                                    
