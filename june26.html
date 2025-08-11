@@ -33,26 +33,29 @@
                         </div>
                         <div class="data">
                             <p class="datap">
-                            When i first modeled the room Entity , I made it have an attribute
-                             where it holds the list of the member is the roomm -val members : List of Users , 
-                             It just felt natural, But this previous winter , i took a design patterns 
-                             class and intuitively , 
-                            I just knew something was wrong , The gang of four guys would be mad
+                            When I first modeled the Room entity, I gave it a field like:
+
+                            <br> <br>
+                            <pre style="background-color: #f5f5f5; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 14px; color: #333; overflow-x: auto;">val members: List<.User></pre>
+                                <br> <br>
+                                It felt natural. A room has members. Why not just store them there?,But the winter before, I took a design patterns clas and i could intuitively feel something was odd
+
                                 </p>
 
+
                            <div class="datap">
-                     
-                           The first problem is MongoDB’s 16MB document size limit. Embedding a 
-                           growing list of users inside a single room document can 
-                           quickly approach that limit, especially in active or large rooms. 
+<h4>The Problems</h4>
+  <br>
+<li style="font-family: 'Cardo', serif;">MongoDB 16MB limit: Embedding a growing list of users in a single document will eventually hit the cap — especially for active, large rooms.(highly unlikely but hey)</li>
+  <li style="font-family: 'Cardo', serif;">Tight Coupling: If a user changes (name, status, etc.), every room document they’re embedded in must also be updated. That’s redundancy + bloated writes + data inconsistency waiting to happen.</li>
+    <li style="font-family: 'Cardo', serif;">Flexibility: Storing references (roomId in User) makes membership queries index-friendly and reduces coupling between aggregates.</li>
+  <br>
 
-
-                            <br> <br>The bigger issue, though, was <strong>tight coupling</strong>. 
-If a user's data changes (say they update their name or status), 
-every room they’re embedded in would also need to be updated. 
-This leads to redundancy, bloated updates, and potential data inconsistencies  
-and these are symtomps of a tightly coupled system, That's that about flexible design pattern , 
+<hr>
                             <br> <br>
+
+                            <h4>Technical Log — Global Exception Handling</h4>
+                            In a roommate app like Awa, things will go wrong:
 
                             Now when building a roommate management app like Awa or any other app for that matter , things don’t always go as planned(rarely goes as planned ). 
                             <br>A user might try to join a room with the wrong code or may try to join  a non existent room. 

@@ -35,18 +35,18 @@
                             </div>
                             <div class="data">
                                 <p class="datap">
-
-                                  This afternoon, I sat at my desk trying to figure out why my TaskRequest DTO wasn’t being 
-                                  recognized. I had named it TaskCreateRequest in the actual code.
-                                   Minor mistake, but it stopped me cold and genuinely made me pause my music <br> <br> 
+                                This afternoon, I sat at my desk wondering why my TaskRequest 
+                                DTO wasn’t being recognized. Turned out I had actually named it 
+                                TaskCreateRequest in the code. Minor mistake, 
+                                but it killed my flow and even made me pause my music.<br> <br> 
 
                                     
 
                                     <br> <br> 
 
-                                    Most of today went into building the Task entity. You know , following the same Interface Metaphor idea, i wanted to name it Chores , more homely , but i actually ironically have a trouble with typing that quickly
-                                    So we need to be able to arrange tasks or make tasks , or even delete tasks  i.e  "mop the floor" , the satate of the task , Who did a specific tasjk , you know , these details
-                                    Tasks are the reason the shared space stays sane — or doesn’t.
+                                  Most of today went into building the Task entity. Sticking to 
+                                  the Interface Metaphor idea, I almost named it Chores — more homely
+                                   — but ironically, I type “chores” slower than “task.” So “task” it is.
 <br> <br>
                                     
           <div style="width:70%; height:0%; padding-bottom:55%; position:relative;">
@@ -67,19 +67,79 @@
 
                                     <br><br>
                                     
-                                    I added the usual DTOs: TaskCreateRequest to receive stuff, TaskResponse to send stuff back, TaskUpdateRequest to edit a task. Basic in structure, a task handed over, and a task reported done.
-                                    <br><br>
-                                  At one point, I tried parsing a string into an Instant for the due date and blanked. I knew it was something like Instant.parse(...) but I just wasn’t sure if that was enough. Spoiler: it was. 
-                                  But it took asking for help to confirm.
+                                   I built the usual DTOs:
+                                    <li style="font-family: 'Cardo', serif;"><strong>TaskCreateRequest </strong> — incoming payload for new tasks.</li>
+                                      <li style="font-family: 'Cardo', serif;"><strong>TaskUpdateRequest </strong> — for edits or status changes.</li>
+                                      <li style="font-family: 'Cardo', serif;"><strong>TaskResponse </strong> — what goes back to the client.</li>
+                                  
                                     </p>
 
                                 <br><br>
-                               I also wrote a repository method to find tasks by name. And then I realized — what even is a unique task name? Every room on the planet has a “Take out trash” or “Clean bathroom” on repeat. So I’m rethinking that approach. 
-                               Maybe search by room ID, maybe by both name and who it’s assigned to.
+                              I also wrote a repository method to find tasks by name, 
+                              then immediately questioned it. Task names aren’t unique.
+                               Every shared house on the planet has “Take out trash” and
+                                “Clean bathroom.” It makes more sense to query by roomId, 
+                              or maybe by (roomId, name, assignedTo) together.
                                 <br><br>
-                                ****************Designing the Brand************
-                               
                                 
+                                    <hr>
+                                    <h4>Technical Log</h4>
+                                    <br>
+                                    <h5>1. Entity Definition</h5>
+
+                                     <pre style="background-color: #f5f5f5; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 14px; color: #333; overflow-x: auto;">
+@Document(collection = "tasks")
+data class Task(
+    @Id val id: String? = null,
+    val name: String,
+    val description: String?,
+    val dueDate: Instant?,
+    val assignedTo: String?, // userId, nullable
+    val roomId: String,
+    val status: TaskStatus = TaskStatus.PENDING,
+    val recurrence: Recurrence? = null,
+    val createdAt: Instant = Instant.now()
+)
+
+                                        </pre>
+                                <br> <br>
+
+                                <h5>2. Enums</h5>
+                                <br>
+                                <pre style="background-color: #f5f5f5; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 14px; color: #333; overflow-x: auto;">
+enum class TaskStatus { PENDING, IN_PROGRESS, COMPLETED }
+enum class Recurrence { DAILY, WEEKLY, MONTHLY, NONE }
+</pre>
+
+                                <br> 
+                                <h5>3. DTOs</h5>
+                               <br>
+                               <li style="font-family: 'Cardo', serif;"><strong>TaskCreateRequest </strong> — name, description, dueDate, assignedTo, recurrence.</li>
+                                      <li style="font-family: 'Cardo', serif;"><strong>TaskUpdateRequest </strong> — editable fields like status, assignedTo, dueDate</li>
+                                      <li style="font-family: 'Cardo', serif;"><strong>TaskResponse </strong> — includes id, createdAt, and computed status.</li>
+                                  
+                                      <br>
+
+                                      <h5>4. Repository Layer</h5>
+                                      <pre style="background-color: #f5f5f5; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 14px; color: #333; overflow-x: auto;">
+interface TaskRepository : MongoRepository<.Task, String> {
+    fun findByRoomId(roomId: String): List<.Task>
+    fun findByRoomIdAndName(roomId: String, name: String): List<.Task>
+}
+</pre>
+
+<br>
+Note: Dropped the idea of a global findByName due to non-uniqueness across rooms.
+<br> <br>
+
+<h5>5. Service Layer Operations</h5>
+                        <li style="font-family: 'Cardo', serif;">createTask(request: TaskCreateRequest): TaskResponse</li>
+                        <li style="font-family: 'Cardo', serif;">updateTask(taskId: String, request: TaskUpdateRequest): TaskResponse</li>
+                        <li style="font-family: 'Cardo', serif;">deleteTask(taskId: String)</li>
+                        <li style="font-family: 'Cardo', serif;">getTasksInRoom(roomId: String): List<.TaskResponse></li>
+                            <li style="font-family: 'Cardo', serif;">assignTask(taskId: String, userId: String)</li>
+
+                                          
                               
                                
 

@@ -35,8 +35,7 @@
                             </div>
                             <div class="data">
                                 <p class="datap">
-When I sat down to start coding, I just wanted to run the application and see where things stood. But instead, I was met with an authentication error:
-
+                                    When I sat down today, I just wanted to run the application and see where things stood. Instead, I was greeted with:
                                   <!---  <iframe width="560" height="315" 
                                     src="https://www.youtube.com/embed/bFEoMO0pc7k?si=U63kZPcJ7nKQJb6Z&amp;start=7" title="YouTube video player" 
                                     frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -44,15 +43,14 @@ When I sat down to start coding, I just wanted to run the application and see wh
 
 
                                     <br> <br>
-                                       <div class="box">
-                                            <div class="verse">
-                                            <i>
-                                              "message": "Something went wrong: Exception authenticating MongoCredential{mechanism=SCRAM-SHA-1, userName='...........', source='admin', password=<hidden>, mechanismProperties=<hidden>}", 
+                                    
+                                             <pre style="background-color: #f5f5f5; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 14px; color: #333; overflow-x: auto;">
+"message": "Something went wrong: Exception authenticating MongoCredential{mechanism=SCRAM-SHA-1, userName='...........', source='admin', password=, mechanismProperties=}",  
 "timestamp": "2025-06-24T20:47:29.095021900Z"
+</pre>
 
-                                            </i>
-                                            </div>
-                                            </div>
+
+
                                     <br> <br>
 
                                   
@@ -62,38 +60,100 @@ When I sat down to start coding, I just wanted to run the application and see wh
 
                              
 
-                                    <img src="" alt="">
+            
                                
-                                    <br> <br>
-I recognized it immediately. Postman helped, but more importantly, the global exception handler I set up the previous day formatted the error just right. The message was clean. Understandable.
- That small detail made debugging feel less like guessing
+                       
+I recognized it right away. Postman helped confirm it, but honestly, the real MVP was my Global Exception Handler from the previous day — it formatted the error so cleanly that I knew exactly what to check first. Debugging didn’t feel like guesswork anymore.
+<br> <br>
+The culprit? My MongoDB connection string had vanished from my environment variables. After re-adding it, I still hit the same wall — because the password I was using was wrong. Seven minutes later, it clicked: I needed to update the credentials in MongoDB Atlas as well. Once I did that, the connection came back to life.
                                 <br> <br>
                               My MongoDB connection string had somehow disappeared from my environment variables. I re-added it, but the password I used was wrong. It took about seven minutes to realize I needed to update the credentials in MongoDB Atlas as well. After doing that, everything connected.
                                 <br> <br>
                                Later, I worked on the "mark task as complete" feature. At first, I made a request like this:
                                
-                         <code>http://localhost:8080/api/task/room/user/68534f4f9c2ee8a8a041f5a5/status?isComplete="false"
-</code>
+                         <br> <br>
+                         <pre style="background-color: #f5f5f5; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 14px; color: #333; overflow-x: auto;">
+PATCH http://localhost:8080/api/task/room/user/68534f4f9c2ee8a8a041f5a5/status?isComplete="false"
+
+</pre>
+
                                 
-                                <br> <br> I started this blog to share my enthusiasm for the science around computers and programming 
-,
-                            That wasn’t right.
-
-But there were issues.
-
-For one, false shouldn’t be in quotes. It’s a boolean, not a string. 
-And more importantly, 
-the URL didn’t match the endpoint mapping. My controller was defined as:
                                 <br> <br>
+                                Wrong for two reasons:
+                                <ol>
+                                     <li style="font-family: 'Cardo', serif;">"false" was in quotes — I was sending a boolean as a string.</li>
+                                              <li style="font-family: 'Cardo', serif;">The URL didn’t match my endpoint mapping at all.</li>
+                                </ol>
 
-                                <div style="font-family: monospace; background-color: #f5f5f5; padding: 12px; border-radius: 6px;font-size: 12px;">
-  <span style="color: #881391;">@PatchMapping</span><span style="color: #000;">("/{taskId}/complete")</span><br>
-  <span style="color: #000;">fun</span> <span style="color: #005cc5;">markTaskComplete</span>(<br>
-  &nbsp;&nbsp;<span style="color: #881391;">@PathVariable</span> <span style="color: #000;">roomId:</span> <span style="color: #000;">String,</span><br>
-  &nbsp;&nbsp;<span style="color: #881391;">@PathVariable</span> <span style="color: #000;">taskId:</span> <span style="color: #000;">String,</span><br>
-  &nbsp;&nbsp;<span style="color: #881391;">@RequestParam</span> <span style="color: #000;">userId:</span> <span style="color: #000;">String</span><br>
-  )
-</div>
+                                <br> <br>
+                                My controller was:
+
+                                                         <pre style="background-color: #f5f5f5; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 14px; color: #333; overflow-x: auto;">
+@PatchMapping("/{taskId}/complete")
+fun markTaskComplete(
+    @PathVariable roomId: String,
+    @PathVariable taskId: String,
+    @RequestParam userId: String
+)
+</pre>
+
+The base route was:
+
+<br>
+
+<pre style="background-color: #f5f5f5; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 14px; color: #333; overflow-x: auto;">
+@RequestMapping("/api/room/{roomId}/task")
+</pre>
+
+<br>
+So the correct request should have been:
+
+<pre style="background-color: #f5f5f5; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 14px; color: #333; overflow-x: auto;">
+PATCH http://localhost:8080/api/room/{roomId}/task/{taskId}/complete?userId={userId}
+</pre>
+
+<br>
+Once I hit that correctly, it worked.
+
+<hr>
+<br>
+<h4>Technical Log</h4>
+<h5>1. MongoDB Credential Error Flow</h5>
+     <li style="font-family: 'Cardo', serif;">Symptom: SCRAM-SHA-1 authentication error on startup.</li>
+     <li style="font-family: 'Cardo', serif;">Cause: Missing environment variable + outdated Atlas password.</li>
+     <li style="font-family: 'Cardo', serif;">Fix:</li>
+        <ol>
+            <li style="font-family: 'Cardo', serif;">Re-add MONGODB_URI in .env.</li>
+            <li style="font-family: 'Cardo', serif;">Update database user credentials in MongoDB Atlas.</li>
+            <li style="font-family: 'Cardo', serif;">Restart app to refresh connection.</li>
+        </ol>
+ <br> <br>
+    <h5>3. Implemented Task Endpoints</h5>
+     <li style="font-family: 'Cardo', serif;">createTask</li>
+     <li style="font-family: 'Cardo', serif;">updateTask</li>
+     <li style="font-family: 'Cardo', serif;">getTask</li>
+     <li style="font-family: 'Cardo', serif;">getTasksByRoom</li>
+     <li style="font-family: 'Cardo', serif;">getCompletedTasksByRoom</li>
+     <li style="font-family: 'Cardo', serif;">getTasksByRoomAndStatus</li>
+     <li style="font-family: 'Cardo', serif;">getUpcomingTasks</li>
+     <li style="font-family: 'Cardo', serif;">markTaskAsComplete</li>
+     <li style="font-family: 'Cardo', serif;">regenerateRecurringTasks</li>
+     <li style="font-family: 'Cardo', serif;">getTasksByUsers</li>
+     <li style="font-family: 'Cardo', serif;">getTasksByUsersAndStatus</li>
+
+     <br> <br>
+     
+        <h5>4. Recurring Tasks — Pending Design</h5>
+        <br>
+        Current thought process:
+        <li style="font-family: 'Cardo', serif;">store recurrence pattern in Task (DAILY, WEEKLY, etc.).</li>
+        <li style="font-family: 'Cardo', serif;">Nightly cron job to clone tasks into upcoming intervals.</li>
+         <li style="font-family: 'Cardo', serif;">Avoid duplication by checking if a recurrence-generated task already exists for that time window.</li>
+
+
+
+
+
 
                              
                                 <!--I'm a big fan of reading articles shared by Yegor Bugayenko <a href="https://www.yegor256.com/" style="font-weight: bold; color: black; display: flex; flex-direction: row;">here</a>- that guy 
@@ -104,55 +164,11 @@ the URL didn’t match the endpoint mapping. My controller was defined as:
 
 
                                 <br> <br>
-                And the base route was:
+            
     
                                 <br> <br>
                                 
-
-                                    <div style="font-family: monospace; background-color: #f5f5f5; padding: 12px; border-radius: 6px; font-size:12px ;">
-  <span style="color: #881391;">@RequestMapping</span><span style="color: #000;">("/api/room/{roomId}/task")</span>
-</div>
-<br> <br>
-So the correct URL should’ve been:
-
-<br> <br>
-<code>PATCH http://localhost:8080/api/room/{roomId}/task/{taskId}/complete?userId={userId}
-</code>
- <br> <br>
- That worked.
-
-I also finished setting up the main task-related endpoints. These now include: <br>
-
-    createTask <br>
-
-    updateTask <br>
-
-    getTask <br>
-
-    getTasksByRoom <br>
-
-    getCompletedTasksByRoom <br>
-
-    getTasksByRoomAndStatus <br>
-
-    getUpcomingTasks <br>
-
-    markTaskAsComplete<br>
-
-    deleteTask<br>
-
-    regenerateRecurringTasks<br>
-
-    getTasksByUsers<br>
-
-    getTasksByUsersAndStatus<br>
-
-    and so on. The recurring tasks feature still needs more thought, but today was a good step forward.
-
-    
-                               
-    
-                              
+                  
                                
 
                                 
