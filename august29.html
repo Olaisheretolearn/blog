@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="staple.css">
+    <link rel="icon" href="cuffee.png" type="image/x-icon">
+    <link rel="stylesheet" href="dark-mode.css" id="dark-mode-stylesheet" disabled>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <title> Welcome</title>
+
+</head>
+<body>
+    <section class="whole">
+        <div class="container">
+            <div class="menu">
+                <a href="../index.html" class="menu-link">Home</a>
+                <div class="toggle-icon" id="dark-mode-toggle"><i class="fa-solid fa-moon" ></i></div> 
+                <a href="" class="menu-link">Menu</a>
+                
+              </div>
+
+              <section class="two">
+              
+                <div class="actual-container">
+                    <div class="progress-bar"></div>
+    
+                        <h1 class="title">Awa: Security — How We Handle Security at Awa</h1>
+                        
+                        <div class="about">
+                            <p> By Awa Engineering Team| 29 August 2023 </p>
+                            </div>
+                            <div class="data">
+                                <p class="datap">
+                                  When we set out to build Awa, our roommate coordination app, 
+                                  one thing was clear from the beginning: security couldn’t be 
+                                  an afterthought. People would be sharing not just chores and bills,
+                                   but also pieces of their daily lives. 
+                                   We wanted Awa to feel safe, trustworthy, 
+                                   and private.
+
+                                   <br> <br>
+                                    In this post,
+                                     we’ll take you behind the scenes
+                                      of how we designed and implemented 
+                                      security across Awa, from passwords to tokens
+                                       to request filters.
+
+
+                                    <br> <br>
+
+                                    <strong>Passwords: One-Way Streets Only</strong> <br>
+                                    Passwords are one of the oldest attack surfaces in software.
+                                     We decided early on that we would never store raw passwords not even temporarily.
+                                     Instead, Awa uses BCrypt through Spring Security’s BCryptPasswordEncoder.
+
+                                     <br> <br>
+                                     We use BCrypt, an industry-standard hashing algorithm, to encode every 
+                                     password the moment it touches our system. BCrypt is intentionally slow, 
+                                     making brute-force attacks impractical. In fact, the hashes are salted and one-way: 
+                                     once encoded, they can’t be reversed.
+                                      The only thing we can do is compare a new raw password attempt against the stored hash.
+
+                                      <br> <br>
+                                      One lesson onemight learn here is that never store or log raw passwords. 
+                                      Even in development, resist the temptation. Treat them as toxic waste.
+ <br> <br>
+                                      <strong>Stateless Authentication: JWTs All the Way</strong> <br>
+                                  We wanted Awa to scale horizontally without worrying about sticky
+                                   sessions or server-side state. 
+                                  That led us to JSON Web Tokens (JWTs).
+                             
+                                  - On login, we issue both an access token (short-lived, 15 minutes) and a refresh token (long-lived, 30 days). <br>
+                                  - Tokens are signed with HMAC SHA-256 using a strong secret key we manage via environment variables.<br>
+                                   - Access tokens are meant for API calls. Refresh tokens are only used to get new access tokens. <br>
+                                     
+                                 <br> This two-tier system keeps everyday requests lightweight, while still giving users a way to stay signed in without constantly re-entering passwords.
+                                 
+
+                                      
+                                    <br> <br>
+
+                                    <strong>Guardrails: Our JWT Filter</strong> <br>
+                                   Every incoming request passes through our custom JwtAuthFilter. Here’s what happens under the hood:
+                                    - The filter looks for an Authorization: Bearer <.token> header. <br>
+                                     -If no token is present, the request moves on as unauthenticated. <br>
+                                      - If a token exists, we validate it with our secret key and extract the user ID. <br>
+                                    - We then load the user from MongoDB and wrap them in a UserPrincipal object, which plugs directly into Spring Security. <br>
+ <br> <br> The result: every request that reaches our controllers already has a verified user identity attached.
+
+
+                                    <strong>Access Control: Roles</strong> <br>
+                                 Roommates in Awa can have different roles (like OWNER vs MEMBER).
+                                  Instead of scattering
+                                  “if owner” checks all over the codebase, we lean on Spring Security’s role-based authorities:
+
+                                  <br>
+                                  <br>
+                                  
+                                  <pre style="background-color: #f5f5f5; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 14px; color: #333; overflow-x: auto;">
+ROLE_OWNER  
+ROLE_MEMBER
+
+</pre>
+  <p class="datap">
+<br>
+This allows us to lock down endpoints declaratively (e.g., only an owner can invite new members) while keeping business logic clean. <br>
+
+                                    <br> it is better  if roles are modeled early , Retrofitting them later is messy and error-prone.
+ 
+
+
+
+                                    <br> <br>
+
+
+                                    <strong>Refresh Logic: Smooth but Strict</strong> <br>
+                                    Refresh tokens are powerful, so we’re careful with them. Our AuthenticationService ensures that:
+                                    
+                                      <br> <br>
+                                      -  The refresh token is valid. <br>
+                                      - The token type is "refresh". <br>
+                                      - The user ID embedded in the token matches the requester.
+                                     <br>
+                                      <br> Only then do we issue new tokens. If any of 
+                                      these fail, the refresh attempt is rejected.
+
+
+                                                                     <br> <br>
+
+
+                                    <strong>Security by Default</strong> <br>
+                                    Awa’s SecurityConfig enforces these principles: 
+                                   
+                                      <br> <br>
+                                      -  CSRF disabled (we’re a stateless API). <br>
+                                      - Session creation policy set to STATELESS. <br>
+                                      - Public endpoints are strictly whitelisted (/api/auth/**, /api/users/register, /avatars/**, etc.)
+                                  <br>
+                                  -  Everything else requires authentication. <br>
+
+                          
+                                      <br> This way, new endpoints are locked down by default, and only explicitly marked endpoints are public.
+                                    
+                                    <br> <br>
+                                    <strong>What’s Next</strong> <br>
+                                   We’re exploring:
+                                   
+                                      <br> <br>
+                                      - Adding rate limiting on auth endpoints to mitigate brute-force attempts.<br>
+ <br> <br>
+                                      ✨ That’s how we handle security at Awa. If you’d like to dig into the code, check out our GitHub repo. And if you spot ways we can improve, we’d love to hear from you.
+                                    </p>
+
+                                    
+                                     
+
+                                    </p>
+
+
+
+    
+                               <div class="datap">
+
+                             
+
+            
+                               
+
+                                
+
+
+
+                             
+                                <!--I'm a big fan of reading articles shared by Yegor Bugayenko <a href="https://www.yegor256.com/" style="font-weight: bold; color: black; display: flex; flex-direction: row;">here</a>- that guy 
+                                really knows his stuff! Another favorite of mine is delving into the world of Object-Oriented Programming (OOP)
+                                 through the insights of Dr. Tom Butler <a href="https://r.je" style="font-weight: bold; color: black;">here</a> a professor from the University of Northampton.
+                                 These reads add some serious depth to my understanding, and I always find myself coming back for more! 📖✨-->
+
+
+
+                                <br> <br>
+            
+    
+                                <br> <br>
+                                
+                  
+                               
+
+                                
+                                        
+                                   
+                                            
+                                             
+                            <hr>
+                            
+                </div>
+    
+                
+                
+            </div>
+    
+        </section>   
+        
+        <script>
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const darkModeStylesheet = document.getElementById('dark-mode-stylesheet');
+        
+            darkModeToggle.addEventListener('click', () => {
+                const isDarkModeEnabled = darkModeStylesheet.disabled;
+                darkModeStylesheet.disabled = !isDarkModeEnabled;
+            });
+        </script>
+
+        <section class="footer">
+            <div class="numpage">
+                <p class="num">Page 1 of 1</p>
+                <p>© Olaoluwa</p>
+                <!---<hr class="ubad">---->
+    
+                
+            </div>
+            <a title="Google Analytics Alternative" href="https://clicky.com/101412980"><img alt="Clicky" src="//static.getclicky.com/media/links/badge.gif" border="0" /></a>
+            <script async data-id="101412980" src="//static.getclicky.com/js"></script>

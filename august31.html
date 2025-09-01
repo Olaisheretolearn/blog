@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="staple.css">
+    <link rel="icon" href="cuffee.png" type="image/x-icon">
+    <link rel="stylesheet" href="dark-mode.css" id="dark-mode-stylesheet" disabled>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <title> Welcome</title>
+
+</head>
+<body>
+    <section class="whole">
+        <div class="container">
+            <div class="menu">
+                <a href="../index.html" class="menu-link">Home</a>
+                <div class="toggle-icon" id="dark-mode-toggle"><i class="fa-solid fa-moon" ></i></div> 
+                <a href="" class="menu-link">Menu</a>
+                
+              </div>
+
+              <section class="two">
+              
+                <div class="actual-container">
+                    <div class="progress-bar"></div>
+    
+                        <h1 class="title">Awa: Bill Transactions in Awa</h1>
+                        
+                        <div class="about">
+                            <p> By Awa Engineering Team| 31 August 2023 </p>
+                            </div>
+                            <div class="data">
+                                <p class="datap">
+                                  Most of what we’re building in Awa isn’t rocket science and 
+                                  that’s kind of the point. 
+                                  It’s not that complicated… but we’d like you to see how cool it is.
+                                   <br> <br>
+                                   We start with one simple fact: one person covers the cost, 
+                                   and everyone else owes their portion. From there, we keep the process
+                                    transparent list the participants (minus the payer) and split the total
+                                     down to two decimals. If tehre's a leftopver cent, we add it to the first share so 
+                                    everything balances perfectly, At creation : <br> 
+
+                                    <br>
+                                     -The total amount is normalized to two decimal places using BigDecimal 
+                                     to eliminate floating-point drift.<br>
+
+                                     -The amount is divided evenly across participants.<br>
+
+                                    -Any rounding remainder is allocated to the first share to guarantee that Σ shares = total.<br>
+<br> <br> 
+               <pre style="background-color: #f5f5f5; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 14px; color: #333; overflow-x: auto;">
+val total = BigDecimal.valueOf(req.amount).setScale(2, HALF_UP)
+val per = total.divide(BigDecimal.valueOf(participants.size.toLong()), 2, HALF_UP)
+...
+</pre>
+
+  <p class="datap">This kinda just keeps aggregates consistent across the UI, repository, and database.</p>
+
+
+  <p class="datap">
+
+                                    <strong>Payment status</strong> <br>
+                     Paying people back usually involves a bit of back-and-forth. 
+                                   To keep it simple, we treat each 
+                                   share as being in one of three states: pending, marked as paid, 
+                                   or confirmed.(Thanks Dr Bautista lmao , and Michael Sips - FINITE AUTOMATA mit opencourse ware)
+
+                                   <br> <br> 
+                                   -PENDING → nothing claimed yet <br>
+                                   -MARK_PAID  → “I sent it” <br>
+                                   -CONFIRMED → “Yep, received”
+
+                                     <br> <br>
+                          Only the bill creator is authorized to confirm transitions into CONFIRMED. 
+                          Once all shares reach CONFIRMED, 
+                          the bill itself resolves to isPaid = true. <br> <br>
+
+                          <style>
+  .state-table { border-collapse: collapse; width: 100%; max-width: 640px; }
+  .state-table th, .state-table td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+  .state-table th[scope="row"] { text-align: left; }
+  .state-table thead th { background: #f6f7f9; }
+  .state-table caption { caption-side: bottom; text-align: center; padding-top: .5rem; color: #666; font-size: .9rem; }
+</style>
+
+<table class="state-table">
+  <caption>Share state transitions (“—” = no-op)</caption>
+  <thead>
+    <tr>
+      <th scope="col">From \ Event</th>
+      <th scope="col"><code>markPaid</code> (any debtor)</th>
+      <th scope="col"><code>confirm</code> (creator only)</th>
+      <th scope="col"><code>reject</code> (creator only)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row"><code>PENDING</code></th>
+      <td><code>MARKED_PAID</code></td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+    </tr>
+    <tr>
+      <th scope="row"><code>MARKED_PAID</code></th>
+      <td>&mdash;</td>
+      <td><code>CONFIRMED</code></td>
+      <td><code>PENDING</code></td>
+    </tr>
+    <tr>
+      <th scope="row"><code>CONFIRMED</code></th>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+      <td>&mdash;</td>
+    </tr>
+  </tbody>
+</table>
+
+  <p class="datap">
+
+
+ <br>
+                                      <strong>Idempotency by construction</strong> <br>
+                                We avoided explicit idempotency keys by structuring operations to be idempotent: <br> <br>
+                             
+                                  - Re-tapping “Mark as paid” is a noop( no-operation we just wanted to sound smart 😔 ) if the share is already MARKED_PAID or CONFIRMED. <br>
+                                  - Confirming a share twice results in no state change.<br>
+                                   -Rejecting a share resets it to PENDING and clears its timestamp, ensuring consistent state replay. <br>
+                                     <br> 
+                                     This pattern allows the UI to optimistically update without risking double-entries or inconsistent transactions.
+                              
+
+                                      
+                                    <br> <br>
+
+                                    <strong>Frontend synchronization</strong> <br>
+                                    On the Flutter side:  <br>
+                                    -Amount inputs are formatted dynamically using a currency symbol provider. (( this doesn't even  work well and we don't even know how to fix it 😔))<br>
+                                    -Splits are recalculated client-side before the request is sent, ensuring the user sees per-person amounts immediately.<br>
+                                      - The payer’s displayed “amount” reflects their net receivable, not the full bill amount, aligning the UI with what's in the backend<br>
+                                    <br>
+  This guarantees that what the user sees is exactly what will be persisted. <br> <br>
+
+                                    <strong>Contracts as bill templates</strong> <br>
+                                    Recurring obligations (e.g., rent, utilities) are treated as contracts: bills 
+                                    flagged with isContract = true. In the current implementation, 
+                                    contracts are just bills filtered into a separate list( so they're easier to find). Future iterations 
+                                    can extend this model with recurrence metadata and automated bill generation.
+
+                                  <br>
+                                  <br>
+                                  </p>
+
+                                  </p>
+                                  
+                             
+  <p class="datap">
+<br>
+
+
+
+
+
+
+                                    <strong>Aggregates: you owe / you’re owed</strong> <br>
+                                        Two aggregates should help the dashboard( we didnt later add  this , couldnt make it work well):
+                                      <br> <br>
+                                      -  “You owe” = sum of the current user’s non-CONFIRMED shares. <br>
+                                      - “You’re owed” = sum of all outstanding shares on bills where the user is the creator.<br>
+                                      - The latter is computed server-side during bill fetch, so it accounts for shares that have been MARKED_PAID but not yet confirmed.
+                                     <br>
+                                     
+
+
+                                                                     <br> <br>
+Well , there goes our simple maths created service for sorting bills
+                                     
+
+<br> <br>**************************************** <br> <br>
+States (Q): <br> <br>
+
+Q={PENDING,MARKED_PAID,CONFIRMED} <br> <br>
+
+Alphabet (Σ):
+
+Σ={markPaid,confirm,reject} <br> <br>
+
+
+Transition function (δ): <br> <br>
+
+δ:Q×Σ→Q <br> <br>
+
+
+Defined as:
+
+δ(PENDING,markPaid)=MARKED_PAID <br>
+
+
+
+δ(MARKED_PAID,confirm)=CONFIRMED <br>
+
+δ(MARKED_PAID,reject)=PENDING <br>
+
+
+All other transitions are identity (noop). <br> <br>
+
+Start state (q₀):
+
+q0=PENDING
+
+
+Accepting state(s) (F):
+<br> <br>
+F={CONFIRMED}
+                                    </p>
+
+
+
+    
+                               <div class="datap">
+
+                             
+
+            
+                               
+
+                                
+
+
+
+                             
+                                <!--I'm a big fan of reading articles shared by Yegor Bugayenko <a href="https://www.yegor256.com/" style="font-weight: bold; color: black; display: flex; flex-direction: row;">here</a>- that guy 
+                                really knows his stuff! Another favorite of mine is delving into the world of Object-Oriented Programming (OOP)
+                                 through the insights of Dr. Tom Butler <a href="https://r.je" style="font-weight: bold; color: black;">here</a> a professor from the University of Northampton.
+                                 These reads add some serious depth to my understanding, and I always find myself coming back for more! 📖✨-->
+
+
+
+                                <br> <br>
+            
+    
+                                <br> <br>
+                                
+                  
+                               
+
+                                
+                                        
+                                   
+                                            
+                                             
+                            <hr>
+                            
+                </div>
+    
+                
+                
+            </div>
+    
+        </section>   
+        
+        <script>
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const darkModeStylesheet = document.getElementById('dark-mode-stylesheet');
+        
+            darkModeToggle.addEventListener('click', () => {
+                const isDarkModeEnabled = darkModeStylesheet.disabled;
+                darkModeStylesheet.disabled = !isDarkModeEnabled;
+            });
+        </script>
+
+        <section class="footer">
+            <div class="numpage">
+                <p class="num">Page 1 of 1</p>
+                <p>© Olaoluwa</p>
+                <!---<hr class="ubad">---->
+    
+                
+            </div>
+            <a title="Google Analytics Alternative" href="https://clicky.com/101412980"><img alt="Clicky" src="//static.getclicky.com/media/links/badge.gif" border="0" /></a>
+            <script async data-id="101412980" src="//static.getclicky.com/js"></script>
